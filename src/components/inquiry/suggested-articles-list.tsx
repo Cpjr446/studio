@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { suggestKnowledgeArticles } from "@/ai/flows/suggest-knowledge-articles";
 import type { KnowledgeArticle } from "@/types/support"; // Assuming mockKnowledgeArticles provides structure
 import { mockKnowledgeArticles } from "@/lib/mock-data"; // For fallback/demo structure
+import { cn } from "@/lib/utils"; // Added missing import
 
 interface SuggestedArticlesListProps {
   customerInquiryText: string;
