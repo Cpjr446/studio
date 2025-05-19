@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Generates a contextual and helpful response for a support agent.
@@ -56,8 +57,21 @@ const generateAgentResponseFlow = ai.defineFlow(
     inputSchema: GenerateAgentResponseInputSchema,
     outputSchema: GenerateAgentResponseOutputSchema,
   },
-  async (input) => {
-    const {output} = await prompt(input);
-    return output!;
+  async (input): Promise<GenerateAgentResponseOutput> => {
+    try {
+      const {output} = await prompt(input);
+      if (!output) {
+        console.error("AI prompt returned no output for generateAgentResponseFlow.");
+        return { suggestedResponse: "AI Assistant could not generate a response at this time. Please try again." };
+      }
+      return output;
+    } catch (error: any) {
+      console.error("Error in generateAgentResponseFlow:", error);
+      let userFriendlyMessage = "AI Assistant encountered an unexpected error. Please try again or proceed manually.";
+      if (error.message && error.message.includes('[429 Too Many Requests]')) {
+        userFriendlyMessage = "AI Assistant is temporarily unavailable due to high demand (rate limit exceeded). Please check your API quota or try again later.";
+      }
+      return { suggestedResponse: userFriendlyMessage };
+    }
   }
 );
