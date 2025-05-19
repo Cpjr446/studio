@@ -2,7 +2,8 @@
 "use client";
 
 import type React from "react";
-import { Filter, Search } from "lucide-react";
+import Link from 'next/link'; // Import Link
+import { Filter, Search, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -59,13 +60,17 @@ const AppSidebarContent: React.FC<AppSidebarContentProps> = ({ inquiries, custom
         />
       </ScrollArea>
       
-      <footer className="p-4 border-t border-sidebar-border text-center">
-        <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} SupportPal AI</p>
+      <footer className="p-4 border-t border-sidebar-border text-sm">
+        <Link href="/neocart/smartorder" passHref legacyBehavior>
+          <a target="_blank" rel="noopener noreferrer" className="flex items-center justify-center text-muted-foreground hover:text-primary transition-colors">
+            <ExternalLink className="h-4 w-4 mr-2" />
+            Visit NeoCart Site
+          </a>
+        </Link>
+        <p className="text-xs text-muted-foreground text-center mt-2">&copy; {new Date().getFullYear()} SupportPal AI</p>
       </footer>
     </div>
   );
 };
 
 export default AppSidebarContent;
-
-    

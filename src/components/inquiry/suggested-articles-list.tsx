@@ -3,7 +3,7 @@
 
 import type React from "react";
 import { useEffect, useState } from "react";
-import { FileText, ExternalLink, RefreshCw } from "lucide-react";
+import { FileText, ExternalLink, RefreshCw, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,17 +20,27 @@ const SuggestedArticlesList: React.FC<SuggestedArticlesListProps> = ({ customerI
   const [suggestedArticles, setSuggestedArticles] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showMockFallback, setShowMockFallback] = useState(false);
 
-  const fetchSuggestions = async () => {
-    if (!customerInquiryText) return;
+  const fetchSuggestions = async (forceRetry = false) => {
+    if (!customerInquiryText && !forceRetry) return;
     setIsLoading(true);
     setError(null);
+    setShowMockFallback(false);
     try {
       const result = await suggestKnowledgeArticles({ customerInquiry: customerInquiryText });
-      setSuggestedArticles(result.suggestedArticles);
-    } catch (err) {
+      if (result.error) {
+        setError(result.error);
+        if (result.error.includes("high demand")) { // Check if it's a rate limit or similar issue
+            setShowMockFallback(true);
+        }
+      } else {
+        setSuggestedArticles(result.suggestedArticles);
+      }
+    } catch (err: any) {
       console.error("Failed to fetch article suggestions:", err);
-      setError("Could not load suggestions.");
+      setError("Could not load suggestions. Displaying general help articles.");
+      setShowMockFallback(true); // Fallback on any generic catch
     } finally {
       setIsLoading(false);
     }
@@ -41,12 +51,16 @@ const SuggestedArticlesList: React.FC<SuggestedArticlesListProps> = ({ customerI
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerInquiryText]);
 
+  const articlesToDisplay = showMockFallback 
+    ? mockKnowledgeArticles.slice(0, 2).map(article => article.title) // Show 2 mock articles as fallback
+    : suggestedArticles;
+
   return (
     <Card className="shadow-none border bg-background">
       <CardHeader className="pb-2 pt-3 px-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-medium">Suggested Articles</CardTitle>
-          <Button variant="ghost" size="icon" onClick={fetchSuggestions} disabled={isLoading} className="h-7 w-7">
+          <Button variant="ghost" size="icon" onClick={() => fetchSuggestions(true)} disabled={isLoading} className="h-7 w-7">
             <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
           </Button>
         </div>
@@ -65,27 +79,29 @@ const SuggestedArticlesList: React.FC<SuggestedArticlesListProps> = ({ customerI
             ))}
           </div>
         )}
-        {!isLoading && error && (
-          <p className="text-xs text-destructive">{error}</p>
+        {!isLoading && error && !showMockFallback && (
+          <div className="flex items-center text-xs text-destructive p-2 bg-destructive/10 rounded-md">
+            <AlertCircle className="h-4 w-4 mr-2 shrink-0"/>
+            {error}
+          </div>
         )}
-        {!isLoading && !error && suggestedArticles.length === 0 && (
-          <p className="text-xs text-muted-foreground">No specific articles found.</p>
+        {!isLoading && articlesToDisplay.length === 0 && !error && (
+          <p className="text-xs text-muted-foreground">No specific articles found for this inquiry.</p>
         )}
-        {!isLoading && !error && suggestedArticles.length > 0 && (
+        {!isLoading && articlesToDisplay.length > 0 && (
           <ul className="space-y-1.5">
-            {suggestedArticles.slice(0, 3).map((articleTitle, index) => { // Show max 3
+            {articlesToDisplay.slice(0, 3).map((articleTitle, index) => { 
               const articleDetail = mockKnowledgeArticles.find(a => a.title.toLowerCase().includes(articleTitle.toLowerCase().slice(0,15)));
               return (
                 <li key={index} className="flex items-center justify-between gap-2 p-2 rounded-md border border-border hover:bg-muted/50 transition-colors">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 overflow-hidden">
                     <FileText className="h-4 w-4 text-primary flex-shrink-0" />
-                    <div>
-                      <h4 className="text-xs font-medium leading-tight">{articleTitle}</h4>
-                      {/* {articleDetail?.summary && <p className="text-xs text-muted-foreground mt-0.5">{articleDetail.summary}</p>} */}
+                    <div className="overflow-hidden">
+                      <h4 className="text-xs font-medium leading-tight truncate" title={articleTitle}>{articleTitle}</h4>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-accent-foreground h-6 w-6">
-                    <a href={articleDetail?.url || "#"} target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-accent-foreground h-6 w-6 shrink-0">
+                    <a href={articleDetail?.url || "#"} target="_blank" rel="noopener noreferrer" title={`Open article: ${articleTitle}`}>
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   </Button>
@@ -94,11 +110,14 @@ const SuggestedArticlesList: React.FC<SuggestedArticlesListProps> = ({ customerI
             })}
           </ul>
         )}
+         {showMockFallback && !isLoading && (
+            <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-border">
+                Displaying general help articles as AI suggestions are temporarily unavailable.
+            </p>
+        )}
       </CardContent>
     </Card>
   );
 };
 
 export default SuggestedArticlesList;
-
-    

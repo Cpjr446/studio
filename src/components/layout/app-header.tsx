@@ -2,8 +2,8 @@
 "use client";
 
 import type React from "react";
-// import Link from "next/link"; // Link is not used anymore for submit buttons
-import { Bell, PanelLeftOpen as LucidePanelLeftOpen } from "lucide-react";
+import Link from "next/link";
+import { Bell, PanelLeftOpen as LucidePanelLeftOpen, LogOut, Settings, UserCircle,Zap, HelpCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { UserProfile } from "@/types/support";
+import { useToast } from "@/hooks/use-toast"; // Added useToast
 
 interface AppHeaderProps {
   userProfile: UserProfile;
@@ -23,6 +24,16 @@ interface AppHeaderProps {
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ userProfile, onToggleMobileInbox, isMobile }) => {
+  const { toast } = useToast(); // Initialize useToast
+
+  const handleFeatureNotImplemented = (featureName: string) => {
+    toast({
+      title: "Coming Soon!",
+      description: `${featureName} feature is not yet implemented.`,
+      variant: "default", 
+    });
+  };
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-md md:px-6">
       {isMobile && onToggleMobileInbox && (
@@ -35,7 +46,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userProfile, onToggleMobileInbox,
         {/* Future elements like breadcrumbs or global actions can go here */}
       </div>
       <div className="flex items-center gap-2 md:gap-3">
-        {/* "Submit Request" and "Product Inquiry" buttons removed as per requirement */}
+        {/* NeoCart link removed as per separate instruction for agent interface */}
         <Button variant="ghost" size="icon" className="rounded-full h-8 w-8">
           <Bell className="h-4.5 w-4.5" />
           <span className="sr-only">Toggle notifications</span>
@@ -57,11 +68,27 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userProfile, onToggleMobileInbox,
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Keyboard Shortcuts</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Profile')}>
+              <UserCircle className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Settings')}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Keyboard Shortcuts')}>
+              <Zap className="mr-2 h-4 w-4" /> {/* Using Zap as a placeholder for keyboard icon */}
+              <span>Keyboard Shortcuts</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Help & Support')}>
+                <HelpCircle className="mr-2 h-4 w-4" />
+                <span>Help & Support</span>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Logout')}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
