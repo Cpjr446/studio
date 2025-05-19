@@ -3,7 +3,7 @@
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import { Archive, ArrowLeft, Edit3, Tag, ThumbsDown, ThumbsUp, Trash2, Send, ChevronDown, ChevronUp, Info, MessageCircle, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, MessageCircle, SlidersHorizontal, ThumbsDown, ThumbsUp, Send } from "lucide-react"; // Removed unused icons, added Send
 import ConversationPanel from "./conversation-panel";
 import CustomerDetailsPanel from "./customer-details-panel";
 import AiAssistPanel from "./ai-assist-panel";
@@ -30,9 +30,9 @@ import { cn } from "@/lib/utils";
 
 interface InquiryDetailViewProps {
   inquiry: Inquiry;
-  customer?: Customer;
+  customer?: Customer; // Customer can be undefined for product queries
   currentUser: UserProfile;
-  onBackToList: () => void; // For mobile view, to go back to inbox
+  onBackToList: () => void; 
   isMobile?: boolean;
 }
 
@@ -41,30 +41,45 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
   const [aiSuggestedResponse, setAiSuggestedResponse] = useState<string | null>(null); 
   const [isLoadingAiResponse, setIsLoadingAiResponse] = useState(false); 
   const [draftMessageForConversation, setDraftMessageForConversation] = useState<string>("");
-  const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(!isMobile); // Open by default on desktop
+  const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(!isMobile); 
 
   useEffect(() => {
     setMessages(inquiry.messages); 
     setAiSuggestedResponse(null); 
     setDraftMessageForConversation(""); 
-    setIsInfoPanelOpen(!isMobile); // Adjust based on mobile status
+    // Only set isInfoPanelOpen based on isMobile if it's a new inquiry or isMobile status changes.
+    // This prevents it from closing when switching between inquiries on desktop.
+    // A more robust solution might involve separate state for this if needed.
+  }, [inquiry, currentUser.name, customer?.name]); // Removed isMobile from deps to prevent panel closing on desktop
 
+  useEffect(() => {
+    // This effect should run when `isMobile` changes to set the initial state of the panel
+    // or when the component mounts.
+    setIsInfoPanelOpen(!isMobile);
+  }, [isMobile]);
+
+
+  useEffect(() => {
     const fetchAiResponse = async () => {
       if (inquiry.messages.length > 0) {
         setIsLoadingAiResponse(true);
         try {
           const inquiryThread = inquiry.messages
-            .map(m => `${m.sender === 'agent' ? currentUser.name : (customer?.name || 'Customer')}: ${m.content}`)
+            .map(m => `${m.sender === 'agent' ? currentUser.name : (customer?.name || inquiry.anonymousUserName || 'Customer')}: ${m.content}`)
             .join('\n\n');
 
           const result = await generateAgentResponse({ 
             inquiryThread,
-            customerName: customer?.name 
+            customerName: customer?.name || inquiry.anonymousUserName 
           });
           setAiSuggestedResponse(result.suggestedResponse);
-        } catch (error) {
+        } catch (error: any) {
           console.error("Failed to generate AI response:", error);
-          setAiSuggestedResponse("Could not generate AI assistance at this time. Please try again or proceed manually.");
+          let userFriendlyMessage = "Could not generate AI assistance at this time. Please try again or proceed manually.";
+          if (error.message && error.message.includes('[429 Too Many Requests]')) {
+            userFriendlyMessage = "AI Assistant is temporarily unavailable due to high demand. Please try again later.";
+          }
+          setAiSuggestedResponse(userFriendlyMessage);
         } finally {
           setIsLoadingAiResponse(false);
         }
@@ -73,7 +88,7 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
       }
     };
     fetchAiResponse();
-  }, [inquiry, customer?.name, currentUser.name, isMobile]);
+  }, [inquiry, customer?.name, inquiry.anonymousUserName, currentUser.name]); // Added inquiry.anonymousUserName
 
   const handleSendMessage = (content: string) => {
     const newMessage: Message = {
@@ -98,11 +113,13 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
   };
 
   const inquiryTextForAISuggestions = inquiry.messages.map(m => m.content).join(" ");
+  const displayCustomerName = customer?.name || inquiry.anonymousUserName || "Unknown";
+  const displayCustomerEmail = customer?.email || inquiry.anonymousUserEmail || "N/A";
+
 
   return (
     <TooltipProvider>
     <div className="flex flex-col h-full max-h-screen overflow-hidden bg-background">
-      {/* Header Section */}
       <header className="p-4 border-b bg-card sticky top-0 z-20">
         <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
@@ -117,31 +134,21 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
                 </Badge>
             </div>
             <div className="flex items-center gap-1.5">
-            <Tooltip>
-              <TooltipTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><Edit3 className="h-4 w-4" /></Button></TooltipTrigger>
-              <TooltipContent><p>Edit Status/Assign</p></TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><Tag className="h-4 w-4" /></Button></TooltipTrigger>
-              <TooltipContent><p>Add Tags</p></TooltipContent>
-            </Tooltip>
+            {/* Removed Edit3 and Tag buttons for now as per new design focus */}
              <Button variant="ghost" size="icon" className="h-8 w-8 md:hidden" onClick={() => setIsInfoPanelOpen(!isInfoPanelOpen)}>
-                {isInfoPanelOpen ? <SlidersHorizontal className="h-4 w-4" /> : <SlidersHorizontal className="h-4 w-4" />} 
+                <SlidersHorizontal className="h-4 w-4" /> 
              </Button>
           </div>
         </div>
         <div className="text-xs text-muted-foreground">
-          <span>From: {customer?.name || 'Unknown'} ({customer?.email || 'N/A'})</span>
+          <span>From: {displayCustomerName} ({displayCustomerEmail})</span>
           <span className="mx-1.5">|</span>
-          <span>Channel: {inquiry.channel}</span>
+          <span>Channel: {inquiry.channel === 'product_query' ? 'Product Form' : inquiry.channel}</span>
         </div>
       </header>
 
-      {/* Main Content Area (Conversation and Info Panel) */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Conversation Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-           {/* AI Assistant Suggested Response - Collapsible */}
            {isLoadingAiResponse ? (
               <div className="p-4 border-b">
                   <Skeleton className="h-4 w-1/3 mb-2" />
@@ -178,7 +185,7 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
                             <TooltipContent><p>Bad Suggestion</p></TooltipContent>
                           </Tooltip>
                         </div>
-                        <Button size="sm" variant="default" onClick={handleUseSuggestedResponse} className="text-xs h-8 px-3 py-1.5">
+                        <Button size="sm" variant="default" onClick={handleUseSuggestedResponse} className="text-xs h-8 px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground">
                             <Send className="h-3.5 w-3.5 mr-1.5" /> Use This
                         </Button>
                       </div>
@@ -190,37 +197,43 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
           <ConversationPanel
             messages={messages}
             currentUser={currentUser}
-            customer={customer}
+            // Pass full customer object if available, or an object with anonymous details
+            customer={customer || (inquiry.anonymousUserName ? { id: inquiry.customerId, name: inquiry.anonymousUserName, email: inquiry.anonymousUserEmail || '', avatarUrl: 'https://placehold.co/80x80.png', joinDate: '', lastContacted: '', tags: [] } : undefined)}
             onSendMessage={handleSendMessage}
             initialDraftMessage={draftMessageForConversation}
             onDraftChange={setDraftMessageForConversation}
           />
         </div>
 
-        {/* Collapsible Right Info Panel */}
         <div className={cn(
             "transition-all duration-300 ease-in-out overflow-hidden border-l bg-card",
-            isInfoPanelOpen ? "w-[320px] p-0" : "w-0 p-0",
-            isMobile && !isInfoPanelOpen ? "hidden" : "flex flex-col", // Hide on mobile if closed
-            isMobile && isInfoPanelOpen ? "absolute top-0 right-0 h-full z-20 w-full max-w-sm shadow-xl" : "" // Full overlay on mobile
+            isInfoPanelOpen ? "w-full md:w-[320px] p-0" : "w-0 p-0", // Full width on mobile when open
+            isMobile && !isInfoPanelOpen ? "hidden" : "flex flex-col", 
+            isMobile && isInfoPanelOpen ? "absolute top-0 right-0 h-full z-30 w-full max-w-md shadow-xl" : "" 
         )}>
             {isMobile && isInfoPanelOpen && (
-                <div className="p-4 border-b flex justify-between items-center">
-                    <h3 className="font-semibold">Details</h3>
+                <div className="p-4 border-b flex justify-between items-center sticky top-0 bg-card z-10">
+                    <h3 className="font-semibold text-foreground">Details</h3>
                     <Button variant="ghost" size="icon" onClick={() => setIsInfoPanelOpen(false)}>
-                        <ArrowLeft className="h-5 w-5" />
+                        <X className="h-5 w-5 text-muted-foreground" />
                     </Button>
                 </div>
             )}
             <ScrollArea className="flex-1">
               <div className="p-4 space-y-4">
-                <CustomerDetailsPanel customer={customer} />
+                 {/* Pass customer if available, or a temporary one for product queries */}
+                <CustomerDetailsPanel customer={customer || (inquiry.anonymousUserName ? { id: inquiry.customerId, name: inquiry.anonymousUserName, email: inquiry.anonymousUserEmail || '', avatarUrl: 'https://placehold.co/80x80.png', joinDate: '', lastContacted: '', tags: [] } : undefined)} />
                 <AiAssistPanel 
                     customerInquiryText={inquiryTextForAISuggestions} 
                     onSelectQuickResponse={handleQuickResponseSelect} 
                 />
               </div>
             </ScrollArea>
+             {isMobile && isInfoPanelOpen && (
+                 <div className="p-4 border-t bg-card">
+                     <Button variant="outline" className="w-full" onClick={() => setIsInfoPanelOpen(false)}>Close Details</Button>
+                 </div>
+             )}
         </div>
       </div>
     </div>
@@ -229,5 +242,3 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
 };
 
 export default InquiryDetailView;
-
-    

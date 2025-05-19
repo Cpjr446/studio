@@ -3,12 +3,12 @@
 
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Mail, MessageSquare, Phone, Flame, AlertTriangle, ShieldCheck } from "lucide-react"; // Added ShieldCheck for Low
+import { Mail, MessageSquare, Phone, Flame, AlertTriangle, ShieldCheck, PackageSearch } from "lucide-react"; // Added PackageSearch
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { Inquiry, Customer } from "@/types/support";
-import { type PrioritizeInquiryOutput } from "@/ai/flows/prioritize-inquiries"; // prioritizeInquiry removed as it's handled in page.tsx
+import { type PrioritizeInquiryOutput } from "@/ai/flows/prioritize-inquiries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -20,7 +20,7 @@ import {
 
 interface InquiryListItemProps {
   inquiry: Inquiry;
-  customer?: Customer;
+  customer?: Customer; // Customer can be undefined if it's an anonymous product query
   isSelected: boolean;
   onSelect: (id: string) => void;
 }
@@ -29,6 +29,7 @@ const ChannelIcon: React.FC<{ channel: Inquiry['channel'] }> = ({ channel }) => 
   if (channel === 'email') return <Mail className="h-3.5 w-3.5 text-muted-foreground" />;
   if (channel === 'chat') return <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />;
   if (channel === 'phone') return <Phone className="h-3.5 w-3.5 text-muted-foreground" />;
+  if (channel === 'product_query') return <PackageSearch className="h-3.5 w-3.5 text-muted-foreground" />; // Icon for product query
   return null;
 };
 
@@ -58,12 +59,11 @@ const PriorityBadge: React.FC<{ score?: number, isSelected: boolean }> = ({ scor
       break;
     case "High":
       icon = <AlertTriangle className="h-3 w-3 mr-1" />;
-      badgeClasses = isSelected ? "bg-status-medium" : "bg-status-medium/20"; // Using Medium for High as per palette
-      textClasses = isSelected ? "text-black" : "text-status-medium"; // Amber often needs dark text
+      badgeClasses = isSelected ? "bg-status-medium" : "bg-status-medium/20";
+      textClasses = isSelected ? "text-black" : "text-status-medium";
       borderClasses = isSelected ? "border-status-medium" : "border-status-medium/30";
       break;
     case "Medium":
-      // No specific icon for medium, or choose one like Zap
       badgeClasses = isSelected ? "bg-accent" : "bg-accent/20";
       textClasses = isSelected ? "text-accent-foreground" : "text-accent";
       borderClasses = isSelected ? "border-accent" : "border-accent/30";
@@ -103,10 +103,12 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
     if (inquiry.isLoadingPriority !== isLoading) {
         setIsLoading(inquiry.isLoadingPriority || false);
     }
-    // Removed automatic fetching from item, should be handled by parent (page.tsx)
   }, [inquiry, isLoading, priorityInfo]);
 
   const timeAgo = formatDistanceToNow(new Date(inquiry.timestamp), { addSuffix: true });
+  
+  const displayName = customer?.name || inquiry.anonymousUserName || 'Unknown User';
+  const displayAvatarUrl = customer?.avatarUrl; // For anonymous users, AvatarFallback will be used
 
   return (
     <TooltipProvider>
@@ -118,16 +120,16 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
       )}
     >
       <div className="flex items-start gap-2.5">
-        {customer?.avatarUrl && (
-          <Avatar className="h-8 w-8 border border-sidebar-border shrink-0">
-            <AvatarImage src={customer.avatarUrl} alt={customer.name} data-ai-hint="person avatar" />
-            <AvatarFallback className="text-xs">{customer.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-        )}
+        <Avatar className="h-8 w-8 border border-sidebar-border shrink-0">
+          <AvatarImage src={displayAvatarUrl} alt={displayName} data-ai-hint="person avatar" />
+          <AvatarFallback className="text-xs">
+            {displayName?.split(" ").map(n => n[0]).join("").substring(0,2) || 'U'}
+          </AvatarFallback>
+        </Avatar>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-0.5">
             <h3 className={cn("text-sm font-medium truncate", isSelected ? "text-sidebar-primary-foreground" : "text-sidebar-foreground")}>
-              {customer?.name || 'Unknown Customer'}
+              {displayName}
             </h3>
             <span className={cn("text-xs shrink-0 ml-2", isSelected ? "text-sidebar-primary-foreground/80" : "text-muted-foreground")}>{timeAgo}</span>
           </div>
@@ -141,7 +143,7 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
               ) : priorityInfo ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div> {/* Div wrapper for TooltipTrigger if PriorityBadge is complex */}
+                    <div> 
                         <PriorityBadge score={priorityInfo.priorityScore} isSelected={isSelected} />
                     </div>
                   </TooltipTrigger>
@@ -176,5 +178,3 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
 };
 
 export default InquiryListItem;
-
-    

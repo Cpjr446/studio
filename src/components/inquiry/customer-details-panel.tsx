@@ -2,15 +2,15 @@
 "use client";
 
 import type React from "react";
-import { UserCircle, Mail, CalendarDays, Tag, Phone, Briefcase, ExternalLink } from "lucide-react";
+import { Mail, ExternalLink } from "lucide-react"; // Simplified imports
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge"; // Not used in simplified version
 import { Button } from "@/components/ui/button";
 import type { Customer } from "@/types/support";
 
 interface CustomerDetailsPanelProps {
-  customer?: Customer;
+  customer?: Customer; // Customer can be undefined
 }
 
 const DetailItem: React.FC<{ icon: React.ElementType; label: string; value?: string }> = ({ icon: Icon, label, value }) => (
@@ -27,52 +27,39 @@ const CustomerDetailsPanel: React.FC<CustomerDetailsPanelProps> = ({ customer })
   if (!customer) {
     return (
       <Card className="h-full bg-card shadow-none border-none">
-        <CardHeader>
-          <CardTitle className="text-base">Customer Details</CardTitle>
+        <CardHeader className="pb-3 pt-3 px-3">
+          <CardTitle className="text-sm font-medium">Customer Details</CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">No customer selected.</p>
+        <CardContent className="px-3 pb-3">
+          <p className="text-xs text-muted-foreground">No customer details available for this inquiry type.</p>
         </CardContent>
       </Card>
     );
   }
 
+  const displayName = customer.name || "N/A";
+  const displayEmail = customer.email || "N/A";
+  const avatarFallback = displayName.split(" ").map(n => n[0]).join("").substring(0,2).toUpperCase() || "U";
+
   return (
-    <Card className="shadow-none border-none bg-card">
-      <CardHeader className="pb-3">
+    <Card className="shadow-none border bg-background">
+      <CardHeader className="pb-2 pt-3 px-3">
         <div className="flex items-center gap-3">
-            <Avatar className="h-12 w-12 border-2 border-primary">
-            <AvatarImage src={customer.avatarUrl} alt={customer.name} data-ai-hint="person portrait" />
-            <AvatarFallback className="text-lg">{customer.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+            <Avatar className="h-10 w-10 border">
+            <AvatarImage src={customer.avatarUrl} alt={displayName} data-ai-hint="person portrait" />
+            <AvatarFallback className="text-base">{avatarFallback}</AvatarFallback>
             </Avatar>
             <div>
-            <CardTitle className="text-md font-semibold">{customer.name}</CardTitle>
-            <CardDescription className="text-xs">{customer.email}</CardDescription>
+            <CardTitle className="text-sm font-medium">{displayName}</CardTitle>
+            <CardDescription className="text-xs text-muted-foreground">{displayEmail}</CardDescription>
             </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3 text-sm">
-        <DetailItem icon={Mail} label="Email" value={customer.email} />
-        <DetailItem icon={Briefcase} label="Last Contacted" value={customer.lastContacted} />
-        {/* 
-        <DetailItem icon={CalendarDays} label="Joined Date" value={customer.joinDate} />
-        <div className="flex items-start gap-3">
-          <Tag className="h-5 w-5 text-muted-foreground mt-0.5" />
-          <div>
-            <p className="text-xs text-muted-foreground">Tags</p>
-            <div className="flex flex-wrap gap-1 mt-1">
-              {customer.tags.length > 0 ? (
-                customer.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs capitalize">{tag}</Badge>
-                ))
-              ) : (
-                <p className="text-sm font-medium">N/A</p>
-              )}
-            </div>
-          </div>
-        </div> 
-        */}
-        <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
+      <CardContent className="space-y-2.5 text-sm px-3 pb-3">
+        <DetailItem icon={Mail} label="Email" value={displayEmail} />
+        {customer.lastContacted && <DetailItem icon={Mail} label="Last Contacted" value={customer.lastContacted} />} 
+        {/* Removed Join Date and Tags for simplification as per prompt */}
+        <Button variant="outline" size="sm" className="w-full mt-3 text-xs">
           <ExternalLink className="h-3.5 w-3.5 mr-2" />
           View Full Profile
         </Button>
@@ -82,5 +69,3 @@ const CustomerDetailsPanel: React.FC<CustomerDetailsPanelProps> = ({ customer })
 };
 
 export default CustomerDetailsPanel;
-
-    

@@ -21,15 +21,18 @@ export interface Message {
 
 export interface Inquiry {
   id: string;
-  customerId: string;
+  customerId: string; // For product queries, this might be a generated ID not in mockCustomers
   subject: string;
   previewText: string;
-  channel: 'email' | 'chat' | 'phone';
+  channel: 'email' | 'chat' | 'phone' | 'product_query'; // Added 'product_query'
   status: 'open' | 'pending' | 'resolved' | 'closed';
   timestamp: string;
   messages: Message[];
   priority?: PrioritizeInquiryOutput;
   isLoadingPriority?: boolean;
+  // Fields for queries submitted without a pre-existing customer record
+  anonymousUserName?: string;
+  anonymousUserEmail?: string;
 }
 
 export interface KnowledgeArticle {
@@ -49,4 +52,15 @@ export interface UserProfile {
   name: string;
   avatarUrl: string;
   email: string;
+}
+
+// Interface for data stored in localStorage for new product queries
+export interface NewProductQueryData {
+  id: string; // Unique ID for the query itself
+  timestamp: string;
+  submitterName: string;
+  submitterEmail: string;
+  queryTopic: string;
+  urgencyLevel: 'Low' | 'Medium' | 'High';
+  message: string;
 }
