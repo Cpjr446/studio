@@ -41,10 +41,19 @@ export default {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
   			},
-        success: { // Added success color
+        success: { 
   				DEFAULT: 'hsl(var(--success))',
   				foreground: 'hsl(var(--success-foreground))'
   			},
+        status: {
+          high: 'hsl(var(--status-high))',
+          medium: 'hsl(var(--status-medium))',
+          low: 'hsl(var(--status-low))',
+        },
+        'chat-bubble-agent-bg': 'hsl(var(--chat-bubble-agent-bg))',
+        'chat-bubble-agent-text': 'hsl(var(--chat-bubble-agent-text))',
+        'chat-bubble-customer-bg': 'hsl(var(--chat-bubble-customer-bg))',
+        'chat-bubble-customer-text': 'hsl(var(--chat-bubble-customer-text))',
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
@@ -97,3 +106,5 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
+    

@@ -2,23 +2,20 @@
 "use client";
 
 import type React from "react";
-// import Link from "next/link"; // Link is not used after removing menu items
-import { Filter } from "lucide-react"; // Removed unused icons: LayoutDashboard, Settings, LifeBuoy, PlusCircle
-import {
-  SidebarContent,
-  SidebarGroup,
-  // SidebarGroupLabel, // Not used after removing menu items
-  SidebarHeader,
-  SidebarInput,
-  // SidebarMenu, // Not used after removing menu items
-  // SidebarMenuButton, // Not used after removing menu items
-  // SidebarMenuItem, // Not used after removing menu items
-  SidebarSeparator,
-} from "@/components/ui/sidebar";
+import { Filter, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import LogoIcon from "@/components/icons/logo-icon";
 import InquiryList from "@/components/inquiry/inquiry-list";
 import type { Inquiry, Customer } from "@/types/support";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AppSidebarContentProps {
   inquiries: Inquiry[];
@@ -29,72 +26,46 @@ interface AppSidebarContentProps {
 
 const AppSidebarContent: React.FC<AppSidebarContentProps> = ({ inquiries, customers, selectedInquiryId, onSelectInquiry }) => {
   return (
-    <>
-      <SidebarHeader className="p-4 md:p-6"> {/* Increased padding */}
-        <div className="flex items-center gap-3"> {/* Increased gap */}
-          <LogoIcon className="h-8 w-8 text-primary" />
-          <h1 className="text-xl font-semibold text-sidebar-foreground">SupportPal AI</h1>
+    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
+      <header className="p-4 md:p-6 border-b border-sidebar-border">
+        <div className="flex items-center gap-3 mb-4">
+          <LogoIcon className="h-7 w-7 text-primary" />
+          <h1 className="text-xl font-semibold">Inbox</h1>
         </div>
-        <div className="mt-6 flex gap-2"> {/* Increased mt */}
-            <SidebarInput placeholder="Search inquiries..." className="bg-sidebar-accent border-sidebar-border placeholder:text-sidebar-foreground/60" />
-            <Button variant="ghost" size="icon" className="text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent">
-                <Filter className="h-5 w-5" /> {/* Slightly larger icon */}
-            </Button>
+        <div className="relative mb-2">
+          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Search inquiries..." className="pl-8 h-9 bg-background" />
         </div>
-      </SidebarHeader>
+        <Select defaultValue="all">
+          <SelectTrigger className="h-9 text-xs">
+            <SelectValue placeholder="Filter by..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Inquiries</SelectItem>
+            <SelectItem value="unread">Unread</SelectItem>
+            <SelectItem value="assigned_to_me">Assigned to me</SelectItem>
+            <SelectItem value="urgent">Urgent First</SelectItem>
+            <SelectItem value="new_replied">New/Replied</SelectItem>
+          </SelectContent>
+        </Select>
+      </header>
 
-      <SidebarContent className="flex-grow p-0">
+      <ScrollArea className="flex-1">
         <InquiryList 
             inquiries={inquiries} 
             customers={customers}
             selectedInquiryId={selectedInquiryId}
             onSelectInquiry={onSelectInquiry}
         />
-      </SidebarContent>
+      </ScrollArea>
       
-      {/* Removed non-functional menu items and their container */}
-      <SidebarSeparator className="my-0" />
-      <SidebarGroup className="p-4"> {/* Increased padding for any potential future footer items */}
-        {/* <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="New Inquiry" asChild>
-              <Link href="#" className="justify-start">
-                <PlusCircle />
-                <span>New Inquiry</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Dashboard" asChild>
-              <Link href="#" className="justify-start">
-                <LayoutDashboard />
-                <span>Dashboard</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Settings" asChild>
-              <Link href="#" className="justify-start">
-                <Settings />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Help & Support" asChild>
-              <Link href="#" className="justify-start">
-                <LifeBuoy />
-                <span>Help & Support</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu> */}
-        <div className="text-xs text-sidebar-foreground/60 text-center">
-          {/* Placeholder for future sidebar footer content, like version or quick actions */}
-        </div>
-      </SidebarGroup>
-    </>
+      <footer className="p-4 border-t border-sidebar-border text-center">
+        <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} SupportPal AI</p>
+      </footer>
+    </div>
   );
 };
 
 export default AppSidebarContent;
+
+    

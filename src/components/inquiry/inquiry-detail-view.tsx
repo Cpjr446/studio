@@ -3,7 +3,7 @@
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import { Archive, ArrowLeft, Edit3, Tag, ThumbsDown, ThumbsUp, Trash2, Send } from "lucide-react";
+import { Archive, ArrowLeft, Edit3, Tag, ThumbsDown, ThumbsUp, Trash2, Send, ChevronDown, ChevronUp, Info, MessageCircle, SlidersHorizontal } from "lucide-react";
 import ConversationPanel from "./conversation-panel";
 import CustomerDetailsPanel from "./customer-details-panel";
 import AiAssistPanel from "./ai-assist-panel";
@@ -18,25 +18,36 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { cn } from "@/lib/utils";
+
 
 interface InquiryDetailViewProps {
   inquiry: Inquiry;
   customer?: Customer;
   currentUser: UserProfile;
-  onBackToList: () => void;
+  onBackToList: () => void; // For mobile view, to go back to inbox
+  isMobile?: boolean;
 }
 
-const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer, currentUser, onBackToList }) => {
+const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer, currentUser, onBackToList, isMobile }) => {
   const [messages, setMessages] = useState<Message[]>(inquiry.messages);
   const [aiSuggestedResponse, setAiSuggestedResponse] = useState<string | null>(null); 
   const [isLoadingAiResponse, setIsLoadingAiResponse] = useState(false); 
   const [draftMessageForConversation, setDraftMessageForConversation] = useState<string>("");
-
+  const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(!isMobile); // Open by default on desktop
 
   useEffect(() => {
     setMessages(inquiry.messages); 
     setAiSuggestedResponse(null); 
     setDraftMessageForConversation(""); 
+    setIsInfoPanelOpen(!isMobile); // Adjust based on mobile status
 
     const fetchAiResponse = async () => {
       if (inquiry.messages.length > 0) {
@@ -62,7 +73,7 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
       }
     };
     fetchAiResponse();
-  }, [inquiry, customer?.name, currentUser.name]);
+  }, [inquiry, customer?.name, currentUser.name, isMobile]);
 
   const handleSendMessage = (content: string) => {
     const newMessage: Message = {
@@ -74,7 +85,6 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
     };
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setDraftMessageForConversation(""); 
-    // Here you would also send the message to your backend
   };
 
   const handleUseSuggestedResponse = () => {
@@ -91,91 +101,92 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
 
   return (
     <TooltipProvider>
-    <div className="flex flex-col h-full max-h-screen overflow-hidden">
+    <div className="flex flex-col h-full max-h-screen overflow-hidden bg-background">
       {/* Header Section */}
-      <header className="p-4 md:p-6 border-b bg-card"> {/* Increased padding */}
-        <div className="flex items-center justify-between mb-3"> {/* Increased mb */}
-            <div className="flex items-center gap-3"> {/* Increased gap */}
-                <Button variant="ghost" size="icon" onClick={onBackToList} className="md:hidden mr-1"> {/* Added mr for spacing */}
-                    <ArrowLeft className="h-5 w-5" />
-                </Button>
-                <h2 className="text-xl lg:text-2xl font-semibold truncate">{inquiry.subject}</h2> {/* Larger font on lg */}
-                <Badge variant={inquiry.status === 'open' ? 'default' : inquiry.status === 'resolved' ? 'success' : 'secondary'} className="capitalize text-xs px-2.5 py-1"> {/* Using success variant */}
+      <header className="p-4 border-b bg-card sticky top-0 z-20">
+        <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+                {isMobile && (
+                  <Button variant="ghost" size="icon" onClick={onBackToList} className="mr-1">
+                      <ArrowLeft className="h-5 w-5" />
+                  </Button>
+                )}
+                <h2 className="text-lg font-semibold truncate max-w-md">{inquiry.subject}</h2>
+                <Badge variant={inquiry.status === 'open' ? 'default' : inquiry.status === 'resolved' ? 'success' : 'secondary'} className="capitalize text-xs px-2 py-0.5">
                     {inquiry.status}
                 </Badge>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
             <Tooltip>
-              <TooltipTrigger asChild><Button variant="outline" size="icon"><Edit3 className="h-4 w-4" /></Button></TooltipTrigger>
+              <TooltipTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><Edit3 className="h-4 w-4" /></Button></TooltipTrigger>
               <TooltipContent><p>Edit Status/Assign</p></TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger asChild><Button variant="outline" size="icon"><Tag className="h-4 w-4" /></Button></TooltipTrigger>
+              <TooltipTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><Tag className="h-4 w-4" /></Button></TooltipTrigger>
               <TooltipContent><p>Add Tags</p></TooltipContent>
             </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild><Button variant="outline" size="icon"><Archive className="h-4 w-4" /></Button></TooltipTrigger>
-              <TooltipContent><p>Archive</p></TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" aria-label="Delete">
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent><p>Delete</p></TooltipContent>
-            </Tooltip>
+             <Button variant="ghost" size="icon" className="h-8 w-8 md:hidden" onClick={() => setIsInfoPanelOpen(!isInfoPanelOpen)}>
+                {isInfoPanelOpen ? <SlidersHorizontal className="h-4 w-4" /> : <SlidersHorizontal className="h-4 w-4" />} 
+             </Button>
           </div>
         </div>
-        <div className="text-sm text-muted-foreground"> {/* Increased font size for readability */}
+        <div className="text-xs text-muted-foreground">
           <span>From: {customer?.name || 'Unknown'} ({customer?.email || 'N/A'})</span>
-          <span className="mx-2">|</span>
+          <span className="mx-1.5">|</span>
           <span>Channel: {inquiry.channel}</span>
-          <span className="mx-2">|</span>
-          <span>Received: {new Date(inquiry.timestamp).toLocaleString()}</span>
         </div>
-        
-        {/* AI Assistant Suggested Response */}
-        {isLoadingAiResponse ? (
-             <div className="mt-4 space-y-2"> {/* Increased mt */}
-                <Skeleton className="h-4 w-1/3" />
-                <Skeleton className="h-16 w-full rounded-md" /> {/* Increased height */}
-                <Skeleton className="h-8 w-1/4 ml-auto" />
-            </div>
-        ) : aiSuggestedResponse ? (
-            <div className="mt-4 p-4 bg-secondary/70 rounded-lg shadow-sm"> {/* Increased mt & p, slightly more opaque bg */}
-                <div className="flex justify-between items-center mb-2"> {/* Increased mb */}
-                    <h4 className="text-sm font-semibold text-secondary-foreground">AI Assistant Suggests:</h4>
-                    <Button size="sm" variant="default" onClick={handleUseSuggestedResponse} className="text-xs h-8 px-3 py-1.5"> {/* Changed to default variant, increased size */}
-                        <Send className="h-3.5 w-3.5 mr-1.5" /> Use This Response
-                    </Button>
-                </div>
-                <p className="text-sm whitespace-pre-wrap text-secondary-foreground/90">{aiSuggestedResponse}</p>
-                <div className="flex gap-1.5 mt-2 justify-end"> {/* Increased gap and mt */}
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-success">
-                        <span><ThumbsUp className="h-4 w-4"/></span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent><p>Good Suggestion</p></TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                       <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive">
-                         <span><ThumbsDown className="h-4 w-4"/></span>
-                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent><p>Bad Suggestion</p></TooltipContent>
-                  </Tooltip>
-                </div>
-            </div>
-        ) : null}
       </header>
 
-      {/* Main Content Area (Panels) */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-0 overflow-hidden">
-        <div className="md:col-span-5 lg:col-span-5 xl:col-span-6 flex flex-col h-full overflow-y-auto border-r">
+      {/* Main Content Area (Conversation and Info Panel) */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Conversation Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+           {/* AI Assistant Suggested Response - Collapsible */}
+           {isLoadingAiResponse ? (
+              <div className="p-4 border-b">
+                  <Skeleton className="h-4 w-1/3 mb-2" />
+                  <Skeleton className="h-16 w-full rounded-md" />
+                  <Skeleton className="h-8 w-1/4 ml-auto mt-2" />
+              </div>
+          ) : aiSuggestedResponse ? (
+              <Accordion type="single" collapsible className="border-b" defaultValue="item-1">
+                <AccordionItem value="item-1" className="border-none">
+                  <AccordionTrigger className="px-4 py-3 text-sm hover:no-underline hover:bg-muted/50 data-[state=open]:bg-muted/50">
+                    <div className="flex items-center gap-2">
+                      <MessageCircle className="h-4 w-4 text-primary" />
+                      <span>AI Suggested Reply</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pt-0 pb-3">
+                      <p className="text-sm whitespace-pre-wrap text-muted-foreground mb-2">{aiSuggestedResponse}</p>
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-1">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-success">
+                                <span><ThumbsUp className="h-4 w-4"/></span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent><p>Good Suggestion</p></TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive">
+                                <span><ThumbsDown className="h-4 w-4"/></span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent><p>Bad Suggestion</p></TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <Button size="sm" variant="default" onClick={handleUseSuggestedResponse} className="text-xs h-8 px-3 py-1.5">
+                            <Send className="h-3.5 w-3.5 mr-1.5" /> Use This
+                        </Button>
+                      </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+          ) : null}
+
           <ConversationPanel
             messages={messages}
             currentUser={currentUser}
@@ -186,14 +197,30 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
           />
         </div>
 
-        <div className="md:col-span-4 lg:col-span-4 xl:col-span-3 flex flex-col h-full overflow-y-auto border-r p-1 bg-background"> {/* Added small padding and bg */}
-           <CustomerDetailsPanel customer={customer} />
-        </div>
-        <div className="md:col-span-3 lg:col-span-3 xl:col-span-3 flex flex-col h-full overflow-y-auto p-1 bg-background"> {/* Added small padding and bg */}
-           <AiAssistPanel 
-            customerInquiryText={inquiryTextForAISuggestions} 
-            onSelectQuickResponse={handleQuickResponseSelect} 
-           />
+        {/* Collapsible Right Info Panel */}
+        <div className={cn(
+            "transition-all duration-300 ease-in-out overflow-hidden border-l bg-card",
+            isInfoPanelOpen ? "w-[320px] p-0" : "w-0 p-0",
+            isMobile && !isInfoPanelOpen ? "hidden" : "flex flex-col", // Hide on mobile if closed
+            isMobile && isInfoPanelOpen ? "absolute top-0 right-0 h-full z-20 w-full max-w-sm shadow-xl" : "" // Full overlay on mobile
+        )}>
+            {isMobile && isInfoPanelOpen && (
+                <div className="p-4 border-b flex justify-between items-center">
+                    <h3 className="font-semibold">Details</h3>
+                    <Button variant="ghost" size="icon" onClick={() => setIsInfoPanelOpen(false)}>
+                        <ArrowLeft className="h-5 w-5" />
+                    </Button>
+                </div>
+            )}
+            <ScrollArea className="flex-1">
+              <div className="p-4 space-y-4">
+                <CustomerDetailsPanel customer={customer} />
+                <AiAssistPanel 
+                    customerInquiryText={inquiryTextForAISuggestions} 
+                    onSelectQuickResponse={handleQuickResponseSelect} 
+                />
+              </div>
+            </ScrollArea>
         </div>
       </div>
     </div>
@@ -202,3 +229,5 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
 };
 
 export default InquiryDetailView;
+
+    

@@ -1,15 +1,15 @@
 
 import type {Metadata} from 'next';
-import { Geist, Geist_Mono } from 'next/font/google'; // Corrected import for Geist fonts
+import { Geist, Geist_Mono } from 'next/font/google'; 
 import './globals.css';
-import { Toaster } from "@/components/ui/toaster"; // Added Toaster
+import { Toaster } from "@/components/ui/toaster"; 
 
-const geistSans = Geist({ // Corrected instantiation
+const geistSans = Geist({ 
   variable: '--font-geist-sans',
   subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({ // Corrected instantiation
+const geistMono = Geist_Mono({ 
   variable: '--font-geist-mono',
   subsets: ['latin'],
 });
@@ -25,11 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
+    <html lang="en" suppressHydrationWarning className="dark"> {/* Default to dark mode */}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground flex flex-col min-h-screen`}>
         {children}
         <Toaster />
       </body>
     </html>
   );
 }
+
+    

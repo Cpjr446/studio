@@ -1,52 +1,39 @@
+
 "use client";
 
+// This component is largely superseded by the layout in src/app/page.tsx
+// It can be removed or refactored if no longer needed.
+// For now, keeping it simple as it might not be used in the new layout.
+
 import type React from "react";
-import {
-  Sidebar,
-  SidebarInset,
-  SidebarProvider,
-  SidebarRail,
-} from "@/components/ui/sidebar";
-import AppHeader from "./app-header";
-import AppSidebarContent from "./app-sidebar-content";
-import type { Inquiry, Customer, UserProfile } from "@/types/support";
 
 interface AppLayoutProps {
   children: React.ReactNode;
-  userProfile: UserProfile;
-  inquiries: Inquiry[];
-  customers: Customer[];
-  selectedInquiryId: string | null;
-  onSelectInquiry: (id: string) => void;
+  // Props below are likely unused with the new page.tsx structure
+  // userProfile: UserProfile;
+  // inquiries: Inquiry[];
+  // customers: Customer[];
+  // selectedInquiryId: string | null;
+  // onSelectInquiry: (id: string) => void;
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({ 
-  children, 
-  userProfile,
-  inquiries,
-  customers,
-  selectedInquiryId,
-  onSelectInquiry
+  children,
 }) => {
+  // The SidebarProvider and Sidebar structure from the old layout
+  // is not directly applicable to the new 30/70 split managed in page.tsx.
+  // This component might just become a simple wrapper if used at all.
   return (
-    <SidebarProvider defaultOpen={true}>
-      <Sidebar variant="sidebar" collapsible="icon" className="border-r border-sidebar-border">
-        <AppSidebarContent 
-          inquiries={inquiries} 
-          customers={customers}
-          selectedInquiryId={selectedInquiryId}
-          onSelectInquiry={onSelectInquiry}
-        />
-        <SidebarRail />
-      </Sidebar>
-      <SidebarInset className="bg-background">
-        <AppHeader userProfile={userProfile} />
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
-          {children}
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+    <div className="flex flex-col min-h-screen">
+      {/* AppHeader is now likely rendered within the right panel in page.tsx */}
+      {/* <AppHeader userProfile={userProfile} /> */}
+      <main className="flex-1">
+        {children}
+      </main>
+    </div>
   );
 };
 
 export default AppLayout;
+
+    

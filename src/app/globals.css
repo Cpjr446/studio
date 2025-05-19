@@ -9,17 +9,17 @@ body {
 
 @layer base {
   :root {
-    /* Light Mode Base */
-    --background: 0 0% 100%;             /* #FFFFFF - Clean white */
-    --foreground: 215 39% 22%;           /* #1E293B - Dark text (slate-800) */
+    /* Light Mode Base (placeholders, focus is on Dark Mode as per prompt) */
+    --background: 210 40% 98%;             /* #F8FAFC - Default Light Background */
+    --foreground: 222 47% 11%;           /* #0F172A - Default Light Foreground */
 
-    --card: 0 0% 100%;                   /* #FFFFFF */
-    --card-foreground: 215 39% 22%;       /* #1E293B */
+    --card: 210 40% 98%;                   /* #F8FAFC */
+    --card-foreground: 222 47% 11%;       /* #0F172A */
 
-    --popover: 0 0% 100%;                /* #FFFFFF */
-    --popover-foreground: 215 39% 22%;    /* #1E293B */
+    --popover: 210 40% 98%;                /* #F8FAFC */
+    --popover-foreground: 222 47% 11%;    /* #0F172A */
 
-    /* Semantic Colors */
+    /* Semantic Colors (Light Mode - placeholders) */
     --primary: 217 91% 60%;              /* #3B82F6 - Vivid Blue */
     --primary-foreground: 210 40% 98%;    /* #F8FAFC - Light text on primary */
 
@@ -29,22 +29,32 @@ body {
     --muted: 220 13% 91%;               /* #E2E8F0 (slate-200) */
     --muted-foreground: 215 20% 65%;      /* #A0AEC0 (slate-500) */
 
-    --accent: 37 90% 50%;                /* #F59E0B - Amber */
+    --accent: 231 99% 62%;                /* #3D5AFE - Indigo A400 (example, adjust if needed for light) */
     --accent-foreground: 210 40% 98%;     /* #F8FAFC - Light text on accent */
 
-    --destructive: 0 70% 50%;             /* #DC2626 - Crimson */
+    --destructive: 0 100% 66%;             /* #FF5252 - Red A200 (example) */
     --destructive-foreground: 0 0% 98%;   /* #FEF2F2 - Almost white */
 
-    --success: 160 82% 42%;              /* #10B981 - Emerald Green */
+    --success: 122 39% 49%;              /* #4CAF50 - Green 500 (example) */
     --success-foreground: 0 0% 98%;      /* #F0FDF4 - Almost white */
 
     --border: 220 13% 88%;               /* #CBD5E1 (slate-300) */
-    --input: 0 0% 100%;                  /* #FFFFFF - White input background */
+    --input: 210 40% 98%;                  /* #FFFFFF - White input background */
     --ring: 217 91% 60%;                 /* #3B82F6 - Primary blue for focus rings */
 
     --radius: 0.5rem;
 
-    /* Sidebar specific colors (Light Mode) */
+    /* Custom colors for chat bubbles etc. - Light mode placeholders */
+    --chat-bubble-agent-bg: 220 14% 93%;    /* Lighter shade for agent */
+    --chat-bubble-agent-text: 215 25% 35%;
+    --chat-bubble-customer-bg: 0 0% 100%; /* White for customer */
+    --chat-bubble-customer-text: 215 39% 22%;
+    
+    --status-high: 0 100% 66%; /* #FF5252 */
+    --status-medium: 45 100% 51%; /* #FFC107 */
+    --status-low: 122 39% 49%; /* #4CAF50 */
+
+    /* Sidebar specific colors (Light Mode - placeholders) */
     --sidebar-background: 220 14% 97%;        /* #F8FAFC (slate-50) - Very light gray */
     --sidebar-foreground: 215 30% 30%;        /* #334155 (slate-700) - Dark gray/blue text */
     --sidebar-primary: 217 91% 60%;           /* #3B82F6 - Main primary blue */
@@ -64,54 +74,64 @@ body {
 
   .dark {
     /* Dark Mode Base */
-    --background: 222 47% 11%;           /* #0F172A - Deep navy (slate-900) */
-    --foreground: 210 40% 98%;           /* #F8FAFC - Light text (slate-50) */
+    --background: 0 0% 7%;             /* #121212 */
+    --foreground: 0 0% 100%;           /* #FFFFFF */
 
-    --card: 222 47% 15%;                 /* #1E293B (slate-800) - Slightly lighter than BG */
-    --card-foreground: 210 40% 98%;       /* #F8FAFC */
+    --card: 0 0% 12%;                   /* #1E1E1E */
+    --card-foreground: 0 0% 100%;       /* #FFFFFF */
 
-    --popover: 222 47% 15%;              /* #1E293B */
-    --popover-foreground: 210 40% 98%;    /* #F8FAFC */
+    --popover: 0 0% 12%;                /* #1E1E1E */
+    --popover-foreground: 0 0% 100%;    /* #FFFFFF */
 
     /* Semantic Colors (Dark Mode Variants) */
-    --primary: 217 91% 65%;              /* #4B8FF7 - Slightly lighter blue for dark mode */
-    --primary-foreground: 210 40% 98%;    /* #F8FAFC */
+    --primary: 231 99% 62%;              /* #3D5AFE - Accent from prompt */
+    --primary-foreground: 0 0% 100%;    /* #FFFFFF - Text on primary */
 
-    --secondary: 215 28% 26%;            /* #334155 (slate-700) */
-    --secondary-foreground: 210 40% 98%;  /* #F8FAFC */
+    --secondary: 0 0% 18%;            /* #2D2D2D - A bit lighter than card for secondary elements */
+    --secondary-foreground: 0 0% 63%;  /* #A0A0A0 - Text Secondary from prompt */
     
-    --muted: 215 28% 19%;               /* #1E293B (slate-800) */
-    --muted-foreground: 215 20% 65%;      /* #A0AEC0 (slate-400) */
+    --muted: 0 0% 15%;               /* Slightly different from card/secondary */
+    --muted-foreground: 0 0% 63%;      /* #A0A0A0 */
 
-    --accent: 37 90% 55%;                /* #F9A825 - Slightly lighter Amber */
-    --accent-foreground: 222 47% 11%;     /* #0F172A - Dark text on accent */
+    --accent: 231 99% 62%;                /* #3D5AFE - Indigo A400 */
+    --accent-foreground: 0 0% 100%;     /* #FFFFFF - Text on accent */
 
-    --destructive: 0 70% 55%;             /* #E53E3E - Slightly lighter Crimson */
-    --destructive-foreground: 0 0% 98%;   /* #FEF2F2 */
+    --destructive: 0 100% 66%;             /* #FF5252 - Status High */
+    --destructive-foreground: 0 0% 0%;   /* Black text on destructive for contrast */
 
-    --success: 160 80% 45%;              /* #14C98E - Slightly lighter Emerald */
-    --success-foreground: 222 47% 11%;    /* #0F172A - Dark text on success */
+    --success: 122 39% 49%;              /* #4CAF50 - Status Low */
+    --success-foreground: 0 0% 100%;    /* White text on success */
     
-    --border: 215 28% 23%;               /* #2C3A4B (slate-700/custom darker) */
-    --input: 215 28% 19%;                /* #1E293B (slate-800) */
-    --ring: 217 91% 65%;                 /* #4B8FF7 - Lighter primary for focus rings */
+    --border: 0 0% 20%;               /* Darker border #333333 approx */
+    --input: 0 0% 12%;                /* #1E1E1E - Surface Cards for input */
+    --ring: 231 99% 70%;                 /* Lighter version of accent for focus rings */
+
+    /* Custom colors from prompt */
+    --status-high: 0 100% 66%; /* #FF5252 */
+    --status-medium: 45 100% 51%; /* #FFC107 */
+    --status-low: 122 39% 49%; /* #4CAF50 */
+
+    --chat-bubble-agent-bg: 0 0% 18%;    /* #2D2D2D */
+    --chat-bubble-agent-text: 0 0% 100%; /* #FFFFFF */
+    --chat-bubble-customer-bg: 0 0% 10%; /* #1A1A1A */
+    --chat-bubble-customer-text: 0 0% 100%; /* #FFFFFF */
 
     /* Sidebar specific colors (Dark Mode) */
-    --sidebar-background: 222 47% 9%;         /* #0C1322 - Even darker navy */
-    --sidebar-foreground: 210 30% 90%;        /* #E2E8F0 (slate-200) - Light gray/blue text */
-    --sidebar-primary: 217 91% 65%;           /* #4B8FF7 - Lighter primary blue */
-    --sidebar-primary-foreground: 210 40% 98%; /* #F8FAFC */
-    --sidebar-accent: 222 47% 15%;            /* #1E293B (slate-800) - Hover state */
-    --sidebar-accent-foreground: 210 30% 95%; /* #F1F5F9 (slate-100) */
-    --sidebar-border: 222 47% 13%;            /* #1A2332 (darker than card) */
-    --sidebar-ring: 217 91% 65%;
+    --sidebar-background: 0 0% 9%;         /* Slightly darker than main bg */
+    --sidebar-foreground: 0 0% 80%;        /* Lighter gray text */
+    --sidebar-primary: 231 99% 62%;           /* #3D5AFE */
+    --sidebar-primary-foreground: 0 0% 100%; /* #FFFFFF */
+    --sidebar-accent: 0 0% 15%;            /* Hover state */
+    --sidebar-accent-foreground: 0 0% 100%; 
+    --sidebar-border: 0 0% 12%;            /* Border for sidebar elements */
+    --sidebar-ring: 231 99% 70%;
 
-    /* Chart Colors (Dark Mode - adjust for contrast) */
-    --chart-1: 217 91% 65%;
-    --chart-2: 37 90% 55%;
-    --chart-3: 160 80% 45%;
-    --chart-4: 261 60% 68%;
-    --chart-5: 0 70% 55%;
+    /* Chart Colors (Dark Mode - adjust for contrast if charts are used) */
+    --chart-1: 231 99% 62%;
+    --chart-2: 45 100% 51%;
+    --chart-3: 122 39% 49%;
+    --chart-4: 0 100% 66%; 
+    --chart-5: 210 40% 80%; /* A generic light blue for a 5th chart color */
   }
 }
 
@@ -121,6 +141,18 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    /* Consider setting base font size here if needed e.g., text-base for 16px */
+    /* Ensure body takes full height for fixed elements */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Ensure html and body take full height for flex layouts */
+  html, body, #__next {
+    height: 100%;
+  }
+  main {
+    flex: 1; /* Allows main content to grow and fill space */
   }
 }
+
+    
