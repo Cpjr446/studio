@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -49,8 +50,32 @@ const prioritizeInquiryFlow = ai.defineFlow(
     inputSchema: PrioritizeInquiryInputSchema,
     outputSchema: PrioritizeInquiryOutputSchema,
   },
-  async input => {
-    const {output} = await prioritizeInquiryPrompt(input);
-    return output!;
+  async (input): Promise<PrioritizeInquiryOutput> => {
+    try {
+      const {output} = await prioritizeInquiryPrompt(input);
+      if (!output) {
+        console.error("AI prompt returned no output for prioritizeInquiryFlow.");
+        return {
+          sentiment: 'neutral',
+          urgency: 'low',
+          priorityScore: 0,
+          reason: "AI Assistant could not determine priority at this time. Please try again.",
+        };
+      }
+      return output;
+    } catch (error: any) {
+      console.error("Error in prioritizeInquiryFlow:", error);
+      let userFriendlyReason = "AI Assistant encountered an unexpected error. Priority could not be determined.";
+      if (error.message && error.message.includes('[429 Too Many Requests]')) {
+        userFriendlyReason = "AI Assistant is temporarily unavailable due to high demand (rate limit exceeded). Priority could not be determined at this time.";
+      }
+      return {
+        sentiment: 'neutral',
+        urgency: 'low',
+        priorityScore: 0,
+        reason: userFriendlyReason,
+      };
+    }
   }
 );
+
