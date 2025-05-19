@@ -23,7 +23,7 @@ const InquiryList: React.FC<InquiryListProps> = ({ inquiries, customers, selecte
   
   return (
     <ScrollArea className="h-full">
-      <div className="p-2 space-y-1">
+      <div className="p-3 md:p-4 space-y-2"> {/* Increased padding and space-y */}
         {inquiries.map((inquiry) => (
           <InquiryListItem
             key={inquiry.id}

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,97 +9,109 @@ body {
 
 @layer base {
   :root {
-    --background: 215 67% 95%; /* #EBF2FA - Soft light-blue */
-    --foreground: 215 25% 25%; /* Dark grayish-blue for text */
+    /* Light Mode Base */
+    --background: 0 0% 100%;             /* #FFFFFF - Clean white */
+    --foreground: 215 39% 22%;           /* #1E293B - Dark text (slate-800) */
 
-    --card: 215 67% 99%; /* Slightly whiter than background */
-    --card-foreground: 215 25% 25%;
+    --card: 0 0% 100%;                   /* #FFFFFF */
+    --card-foreground: 215 39% 22%;       /* #1E293B */
 
-    --popover: 215 67% 100%; /* White */
-    --popover-foreground: 215 25% 25%;
+    --popover: 0 0% 100%;                /* #FFFFFF */
+    --popover-foreground: 215 39% 22%;    /* #1E293B */
 
-    --primary: 217 89% 58%;   /* #4285F4 - Calm blue (Updated) */
-    --primary-foreground: 210 100% 98%; /* Almost white */
+    /* Semantic Colors */
+    --primary: 217 91% 60%;              /* #3B82F6 - Vivid Blue */
+    --primary-foreground: 210 40% 98%;    /* #F8FAFC - Light text on primary */
 
-    --secondary: 215 50% 90%; /* Lighter blue-gray */
-    --secondary-foreground: 215 25% 35%; /* Readable dark text on secondary */
+    --secondary: 220 14% 96%;            /* #F1F5F9 (slate-100) - Light gray */
+    --secondary-foreground: 215 25% 35%;  /* #475569 (slate-600) - Darker gray text */
+    
+    --muted: 220 13% 91%;               /* #E2E8F0 (slate-200) */
+    --muted-foreground: 215 20% 65%;      /* #A0AEC0 (slate-500) */
 
-    --muted: 215 40% 88%; /* Muted blue-gray */
-    --muted-foreground: 215 25% 50%; /* Lighter text for muted elements */
+    --accent: 37 90% 50%;                /* #F59E0B - Amber */
+    --accent-foreground: 210 40% 98%;     /* #F8FAFC - Light text on accent */
 
-    --accent: 261 60% 62%;    /* #9065D7 - Complementary purple */
-    --accent-foreground: 210 100% 98%; /* Almost white */
+    --destructive: 0 70% 50%;             /* #DC2626 - Crimson */
+    --destructive-foreground: 0 0% 98%;   /* #FEF2F2 - Almost white */
 
-    --destructive: 0 84.2% 60.2%; /* Standard red */
-    --destructive-foreground: 0 0% 98%;
+    --success: 160 82% 42%;              /* #10B981 - Emerald Green */
+    --success-foreground: 0 0% 98%;      /* #F0FDF4 - Almost white */
 
-    --border: 215 40% 85%; /* Slightly darker than muted for borders */
-    --input: 215 40% 92%; /* Lighter than background for input fields */
-    --ring: 217 89% 58%; /* Same as primary (Updated) */
+    --border: 220 13% 88%;               /* #CBD5E1 (slate-300) */
+    --input: 0 0% 100%;                  /* #FFFFFF - White input background */
+    --ring: 217 91% 60%;                 /* #3B82F6 - Primary blue for focus rings */
 
     --radius: 0.5rem;
 
-    /* Sidebar specific colors (Darker theme for contrast) */
-    --sidebar-background: 215 30% 18%; /* Dark blue */
-    --sidebar-foreground: 215 20% 88%; /* Light text on dark sidebar */
-    --sidebar-primary: 217 89% 58%; /* Active item uses main primary (Updated) */
-    --sidebar-primary-foreground: 210 100% 98%;
-    --sidebar-accent: 215 30% 28%; /* Hover state, slightly lighter than sidebar bg */
-    --sidebar-accent-foreground: 215 20% 95%; /* Brighter text on hover */
-    --sidebar-border: 215 30% 25%;
-    --sidebar-ring: 217 89% 58%; /* (Updated) */
+    /* Sidebar specific colors (Light Mode) */
+    --sidebar-background: 220 14% 97%;        /* #F8FAFC (slate-50) - Very light gray */
+    --sidebar-foreground: 215 30% 30%;        /* #334155 (slate-700) - Dark gray/blue text */
+    --sidebar-primary: 217 91% 60%;           /* #3B82F6 - Main primary blue */
+    --sidebar-primary-foreground: 0 0% 100%;  /* #FFFFFF */
+    --sidebar-accent: 220 13% 90%;            /* #E2E8F0 (slate-200) - Hover state */
+    --sidebar-accent-foreground: 215 30% 25%; /* #1E293B (slate-800) - Darker text on hover */
+    --sidebar-border: 220 13% 85%;            /* #D1D5DB (slate-300) */
+    --sidebar-ring: 217 91% 60%;
 
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    /* Chart Colors (Example, can be refined) */
+    --chart-1: 217 91% 60%; /* Primary Blue */
+    --chart-2: 37 90% 50%;  /* Accent Amber */
+    --chart-3: 160 82% 42%; /* Success Emerald */
+    --chart-4: 261 60% 62%; /* Existing Purple (can be updated) */
+    --chart-5: 0 70% 50%;   /* Destructive Crimson */
   }
 
   .dark {
-    --background: 215 30% 12%;
-    --foreground: 215 20% 90%;
+    /* Dark Mode Base */
+    --background: 222 47% 11%;           /* #0F172A - Deep navy (slate-900) */
+    --foreground: 210 40% 98%;           /* #F8FAFC - Light text (slate-50) */
 
-    --card: 215 30% 18%;
-    --card-foreground: 215 20% 90%;
+    --card: 222 47% 15%;                 /* #1E293B (slate-800) - Slightly lighter than BG */
+    --card-foreground: 210 40% 98%;       /* #F8FAFC */
 
-    --popover: 215 30% 15%;
-    --popover-foreground: 215 20% 90%;
+    --popover: 222 47% 15%;              /* #1E293B */
+    --popover-foreground: 210 40% 98%;    /* #F8FAFC */
 
-    --primary: 217 89% 62%; /* Slightly lighter primary for dark mode (Updated) */
-    --primary-foreground: 215 30% 10%; /* Darker text on primary */
+    /* Semantic Colors (Dark Mode Variants) */
+    --primary: 217 91% 65%;              /* #4B8FF7 - Slightly lighter blue for dark mode */
+    --primary-foreground: 210 40% 98%;    /* #F8FAFC */
 
-    --secondary: 215 30% 25%;
-    --secondary-foreground: 215 20% 90%;
+    --secondary: 215 28% 26%;            /* #334155 (slate-700) */
+    --secondary-foreground: 210 40% 98%;  /* #F8FAFC */
+    
+    --muted: 215 28% 19%;               /* #1E293B (slate-800) */
+    --muted-foreground: 215 20% 65%;      /* #A0AEC0 (slate-400) */
 
-    --muted: 215 30% 22%;
-    --muted-foreground: 215 20% 70%;
+    --accent: 37 90% 55%;                /* #F9A825 - Slightly lighter Amber */
+    --accent-foreground: 222 47% 11%;     /* #0F172A - Dark text on accent */
 
-    --accent: 261 60% 68%; /* Slightly lighter accent */
-    --accent-foreground: 215 30% 10%;
+    --destructive: 0 70% 55%;             /* #E53E3E - Slightly lighter Crimson */
+    --destructive-foreground: 0 0% 98%;   /* #FEF2F2 */
 
-    --destructive: 0 62.8% 50.6%;
-    --destructive-foreground: 0 0% 98%;
+    --success: 160 80% 45%;              /* #14C98E - Slightly lighter Emerald */
+    --success-foreground: 222 47% 11%;    /* #0F172A - Dark text on success */
+    
+    --border: 215 28% 23%;               /* #2C3A4B (slate-700/custom darker) */
+    --input: 215 28% 19%;                /* #1E293B (slate-800) */
+    --ring: 217 91% 65%;                 /* #4B8FF7 - Lighter primary for focus rings */
 
-    --border: 215 30% 25%;
-    --input: 215 30% 20%;
-    --ring: 217 89% 62%; /* (Updated) */
+    /* Sidebar specific colors (Dark Mode) */
+    --sidebar-background: 222 47% 9%;         /* #0C1322 - Even darker navy */
+    --sidebar-foreground: 210 30% 90%;        /* #E2E8F0 (slate-200) - Light gray/blue text */
+    --sidebar-primary: 217 91% 65%;           /* #4B8FF7 - Lighter primary blue */
+    --sidebar-primary-foreground: 210 40% 98%; /* #F8FAFC */
+    --sidebar-accent: 222 47% 15%;            /* #1E293B (slate-800) - Hover state */
+    --sidebar-accent-foreground: 210 30% 95%; /* #F1F5F9 (slate-100) */
+    --sidebar-border: 222 47% 13%;            /* #1A2332 (darker than card) */
+    --sidebar-ring: 217 91% 65%;
 
-    /* Sidebar colors for dark mode (can be same as light mode's dark sidebar or adjusted) */
-    --sidebar-background: 215 30% 15%; /* Slightly different dark shade for dark mode sidebar */
-    --sidebar-foreground: 215 20% 85%;
-    --sidebar-primary: 217 89% 62%; /* (Updated) */
-    --sidebar-primary-foreground: 215 30% 10%;
-    --sidebar-accent: 215 30% 22%;
-    --sidebar-accent-foreground: 215 20% 92%;
-    --sidebar-border: 215 30% 20%;
-    --sidebar-ring: 217 89% 62%; /* (Updated) */
-
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Chart Colors (Dark Mode - adjust for contrast) */
+    --chart-1: 217 91% 65%;
+    --chart-2: 37 90% 55%;
+    --chart-3: 160 80% 45%;
+    --chart-4: 261 60% 68%;
+    --chart-5: 0 70% 55%;
   }
 }
 
@@ -108,5 +121,6 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    /* Consider setting base font size here if needed e.g., text-base for 16px */
   }
 }
