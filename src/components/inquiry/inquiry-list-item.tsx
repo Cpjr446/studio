@@ -3,7 +3,7 @@
 
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Mail, MessageSquare, Phone, Zap, TrendingUp, CheckCircle, AlertCircle, Info } from "lucide-react";
+import { Mail, MessageSquare, Phone, Zap, CheckCircle, AlertCircle, Info } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -11,7 +11,11 @@ import type { Inquiry, Customer } from "@/types/support";
 import { prioritizeInquiry, type PrioritizeInquiryOutput } from "@/ai/flows/prioritize-inquiries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from 'date-fns';
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"; // TooltipProvider is usually higher up
 
 interface InquiryListItemProps {
   inquiry: Inquiry;
@@ -35,29 +39,53 @@ const SentimentIcon: React.FC<{ sentiment?: PrioritizeInquiryOutput['sentiment']
 };
 
 const UrgencyIndicator: React.FC<{ urgency?: PrioritizeInquiryOutput['urgency'] }> = ({ urgency }) => {
-  let color = "bg-gray-400";
-  if (urgency === 'low') color = "bg-green-500";
-  if (urgency === 'medium') color = "bg-yellow-500";
-  if (urgency === 'high') color = "bg-red-500";
-  return <span className={cn("h-2 w-2 rounded-full inline-block", color)} title={`Urgency: ${urgency || 'N/A'}`}></span>;
+  let color = "bg-gray-400"; // Default
+  let title = "Urgency: N/A";
+  if (urgency === 'low') { color = "bg-green-500"; title = "Urgency: Low"; }
+  if (urgency === 'medium') { color = "bg-yellow-500"; title = "Urgency: Medium"; }
+  if (urgency === 'high') { color = "bg-red-500"; title = "Urgency: High"; }
+  return <span className={cn("h-2 w-2 rounded-full inline-block", color)} title={title}></span>;
 };
 
+const getPriorityLabel = (score?: number): string => {
+  if (score === undefined) return "N/A";
+  if (score >= 9) return "Urgent";
+  if (score >= 7) return "High";
+  if (score >= 4) return "Medium";
+  return "Low";
+};
 
 const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, isSelected, onSelect }) => {
   const [priorityInfo, setPriorityInfo] = useState<PrioritizeInquiryOutput | undefined>(inquiry.priority);
   const [isLoading, setIsLoading] = useState(inquiry.isLoadingPriority || false);
 
   useEffect(() => {
-    if (!inquiry.priority && !isLoading) {
+    // Update local state if inquiry.priority changes externally (e.g. after initial batch load)
+    if (inquiry.priority !== priorityInfo) {
+      setPriorityInfo(inquiry.priority);
+    }
+    // Update loading state if inquiry.isLoadingPriority changes
+    if (inquiry.isLoadingPriority !== isLoading) {
+        setIsLoading(inquiry.isLoadingPriority || false);
+    }
+
+    // Only fetch if priority is not set and not already loading triggered by this component
+    // This condition might need refinement if parent component re-triggers loading
+    if (!inquiry.priority && !inquiry.isLoadingPriority && !isLoading) {
       setIsLoading(true);
       prioritizeInquiry({ inquiry: `${inquiry.subject} ${inquiry.previewText}` })
-        .then(setPriorityInfo)
+        .then(data => {
+            setPriorityInfo(data);
+            // Potentially call a function to update the parent's inquiry object
+            // so sorting can happen with the new data. For now, local update is fine.
+        })
         .catch(console.error)
         .finally(() => setIsLoading(false));
     }
-  }, [inquiry, isLoading]);
+  }, [inquiry, isLoading, priorityInfo]); // Added priorityInfo to dependencies
 
   const timeAgo = formatDistanceToNow(new Date(inquiry.timestamp), { addSuffix: true });
+  const priorityLabel = getPriorityLabel(priorityInfo?.priorityScore);
 
   return (
     <button
@@ -89,17 +117,33 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
             <div className="flex items-center gap-2">
               <ChannelIcon channel={inquiry.channel} />
               {isLoading ? (
-                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-24" /> // Increased width for "Loading Priority..."
               ) : priorityInfo ? (
                 <>
                   <SentimentIcon sentiment={priorityInfo.sentiment} />
                   <UrgencyIndicator urgency={priorityInfo.urgency} />
-                  <Badge variant={isSelected ? "secondary" : "outline"} className={cn("text-xs px-1.5 py-0.5", isSelected ? "bg-sidebar-accent text-sidebar-accent-foreground" : "border-sidebar-border text-sidebar-foreground/70")}>
-                    P: {priorityInfo.priorityScore}
-                  </Badge>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge 
+                        variant={isSelected ? "secondary" : "outline"} 
+                        className={cn(
+                          "text-xs px-1.5 py-0.5 cursor-default", 
+                          isSelected ? "bg-sidebar-accent text-sidebar-accent-foreground" : "border-sidebar-border text-sidebar-foreground/70",
+                          priorityLabel === "Urgent" && (isSelected ? "bg-red-500 text-white" : "bg-red-500/20 text-red-700 border-red-500/30"),
+                          priorityLabel === "High" && (isSelected ? "bg-orange-500 text-white" : "bg-orange-500/20 text-orange-700 border-orange-500/30")
+                        )}
+                      >
+                        {priorityLabel}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" align="start" className="max-w-xs">
+                      <p className="text-xs font-medium">Reasoning:</p>
+                      <p className="text-xs">{priorityInfo.reason || "No specific reason provided."}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </>
               ) : (
-                <Zap className="h-4 w-4 text-muted-foreground" /> 
+                <Zap className="h-4 w-4 text-muted-foreground" title="Priority not yet determined" /> 
               )}
             </div>
             <Badge 
