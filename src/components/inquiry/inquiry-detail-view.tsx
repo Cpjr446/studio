@@ -154,13 +154,17 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
                 <div className="flex gap-1.5 mt-2 justify-end"> {/* Increased gap and mt */}
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-success"><ThumbsUp className="h-4 w-4"/></Button> {/* Larger icon, success color */}
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-success">
+                        <span><ThumbsUp className="h-4 w-4"/></span>
+                      </Button>
                     </TooltipTrigger>
                     <TooltipContent><p>Good Suggestion</p></TooltipContent>
                   </Tooltip>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                       <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive"><ThumbsDown className="h-4 w-4"/></Button> {/* Larger icon */}
+                       <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive">
+                         <span><ThumbsDown className="h-4 w-4"/></span>
+                       </Button>
                     </TooltipTrigger>
                     <TooltipContent><p>Bad Suggestion</p></TooltipContent>
                   </Tooltip>
@@ -198,4 +202,3 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
 };
 
 export default InquiryDetailView;
-
