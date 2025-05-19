@@ -3,15 +3,14 @@
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import { Archive, ArrowLeft, Edit3, Tag, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
+import { Archive, ArrowLeft, Edit3, Tag, ThumbsDown, ThumbsUp, Trash2, Send } from "lucide-react";
 import ConversationPanel from "./conversation-panel";
 import CustomerDetailsPanel from "./customer-details-panel";
 import AiAssistPanel from "./ai-assist-panel";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import type { Inquiry, Customer, Message, UserProfile } from "@/types/support";
-import { summarizeInquiry } from "@/ai/flows/summarize-inquiry";
+import { generateAgentResponse } from "@/ai/flows/generate-agent-response"; // Changed from summarizeInquiry
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
@@ -29,31 +28,42 @@ interface InquiryDetailViewProps {
 
 const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer, currentUser, onBackToList }) => {
   const [messages, setMessages] = useState<Message[]>(inquiry.messages);
-  const [summary, setSummary] = useState<string | null>(null);
-  const [isLoadingSummary, setIsLoadingSummary] = useState(false);
+  const [aiSuggestedResponse, setAiSuggestedResponse] = useState<string | null>(null); // Renamed from summary
+  const [isLoadingAiResponse, setIsLoadingAiResponse] = useState(false); // Renamed from isLoadingSummary
+  const [draftMessageForConversation, setDraftMessageForConversation] = useState<string>("");
+
 
   useEffect(() => {
     setMessages(inquiry.messages); // Update messages when inquiry changes
-    // Fetch summary when inquiry changes
-    const fetchSummary = async () => {
+    setAiSuggestedResponse(null); // Clear previous suggestion
+    setDraftMessageForConversation(""); // Clear draft message for text area
+
+    const fetchAiResponse = async () => {
       if (inquiry.messages.length > 0) {
-        setIsLoadingSummary(true);
+        setIsLoadingAiResponse(true);
         try {
-          const inquiryText = inquiry.messages.map(m => m.content).join('\n');
-          const result = await summarizeInquiry({ inquiry: inquiryText });
-          setSummary(result.summary);
+          // Construct a coherent thread for the AI
+          const inquiryThread = inquiry.messages
+            .map(m => `${m.sender === 'agent' ? currentUser.name : (customer?.name || 'Customer')}: ${m.content}`)
+            .join('\n\n');
+
+          const result = await generateAgentResponse({ 
+            inquiryThread,
+            customerName: customer?.name 
+          });
+          setAiSuggestedResponse(result.suggestedResponse);
         } catch (error) {
-          console.error("Failed to summarize inquiry:", error);
-          setSummary("Could not generate summary.");
+          console.error("Failed to generate AI response:", error);
+          setAiSuggestedResponse("Could not generate AI assistance at this time. Please try again or proceed manually.");
         } finally {
-          setIsLoadingSummary(false);
+          setIsLoadingAiResponse(false);
         }
       } else {
-        setSummary(null);
+        setAiSuggestedResponse(null);
       }
     };
-    fetchSummary();
-  }, [inquiry]);
+    fetchAiResponse();
+  }, [inquiry, customer?.name, currentUser.name]);
 
   const handleSendMessage = (content: string) => {
     const newMessage: Message = {
@@ -64,12 +74,18 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
       avatar: currentUser.avatarUrl,
     };
     setMessages(prevMessages => [...prevMessages, newMessage]);
+    setDraftMessageForConversation(""); // Clear textarea after sending
     // Here you would also send the message to your backend
   };
 
+  const handleUseSuggestedResponse = () => {
+    if (aiSuggestedResponse) {
+      setDraftMessageForConversation(aiSuggestedResponse);
+    }
+  };
+  
   const handleQuickResponseSelect = (content: string) => {
-    // For now, this just calls send message. Could also populate textarea.
-    handleSendMessage(content);
+    setDraftMessageForConversation(prev => prev ? `${prev}\n${content}` : content);
   };
 
   const inquiryTextForAISuggestions = inquiry.messages.map(m => m.content).join(" ");
@@ -119,14 +135,36 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
           <span className="mx-2">|</span>
           <span>Received: {new Date(inquiry.timestamp).toLocaleString()}</span>
         </div>
-        {isLoadingSummary ? (
-            <Skeleton className="h-4 w-full mt-2 rounded" />
-        ) : summary ? (
-            <div className="mt-2 p-2 bg-secondary/50 rounded-md text-sm text-secondary-foreground">
-                <strong className="font-medium">AI Summary:</strong> {summary}
-                <div className="flex gap-1 mt-1">
-                  <Button variant="ghost" size="icon" className="h-6 w-6"><ThumbsUp className="h-3 w-3"/></Button>
-                  <Button variant="ghost" size="icon" className="h-6 w-6"><ThumbsDown className="h-3 w-3"/></Button>
+        
+        {/* AI Assistant Suggested Response */}
+        {isLoadingAiResponse ? (
+             <div className="mt-3 space-y-2">
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-12 w-full rounded" />
+                <Skeleton className="h-8 w-1/5 ml-auto" />
+            </div>
+        ) : aiSuggestedResponse ? (
+            <div className="mt-3 p-3 bg-secondary/50 rounded-lg shadow">
+                <div className="flex justify-between items-center mb-1.5">
+                    <h4 className="text-sm font-semibold text-secondary-foreground">AI Assistant Suggests:</h4>
+                    <Button size="sm" variant="outline" onClick={handleUseSuggestedResponse} className="text-xs h-7 px-2 py-1">
+                        <Send className="h-3 w-3 mr-1.5" /> Use This Response
+                    </Button>
+                </div>
+                <p className="text-sm whitespace-pre-wrap text-secondary-foreground/90">{aiSuggestedResponse}</p>
+                <div className="flex gap-1 mt-1.5 justify-end">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-primary"><ThumbsUp className="h-3.5 w-3.5"/></Button>
+                    </TooltipTrigger>
+                    <TooltipContent><p>Good Suggestion</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"><ThumbsDown className="h-3.5 w-3.5"/></Button>
+                    </TooltipTrigger>
+                    <TooltipContent><p>Bad Suggestion</p></TooltipContent>
+                  </Tooltip>
                 </div>
             </div>
         ) : null}
@@ -141,6 +179,8 @@ const InquiryDetailView: React.FC<InquiryDetailViewProps> = ({ inquiry, customer
             currentUser={currentUser}
             customer={customer}
             onSendMessage={handleSendMessage}
+            initialDraftMessage={draftMessageForConversation}
+            onDraftChange={setDraftMessageForConversation} // Allow ConversationPanel to update the draft
           />
         </div>
 
