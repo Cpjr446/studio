@@ -15,10 +15,10 @@ export default function HeroSection() {
             SmartOrder is the intelligent plugin empowering businesses to effortlessly manage, fulfill, and track online orders, boosting efficiency and customer satisfaction.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white font-semibold shadow-lg px-8 py-3 text-base">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg px-8 py-3 text-base">
               <Link href="#contact">Request a Demo</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/5 hover:border-primary/80 font-semibold shadow-lg px-8 py-3 text-base">
+            <Button asChild size="lg" className="bg-cta-blue-learn-more hover:bg-cta-blue-learn-more/90 text-cta-blue-learn-more-foreground font-semibold shadow-lg px-8 py-3 text-base border border-transparent">
               <Link href="#features">Learn More</Link>
             </Button>
           </div>

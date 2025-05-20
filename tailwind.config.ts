@@ -25,6 +25,10 @@ export default {
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
+        'cta-blue-learn-more': {
+          DEFAULT: 'hsl(var(--cta-blue-learn-more))',
+          foreground: 'hsl(var(--cta-blue-learn-more-foreground))'
+        },
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
   				foreground: 'hsl(var(--secondary-foreground))'
@@ -106,5 +110,3 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-
-    

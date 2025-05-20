@@ -9,11 +9,6 @@ body {
 
 @layer base {
   :root {
-    /* Light Mode Base for SupportPal AI (can be different from NeoCart if needed) */
-    /* These are placeholders if SupportPal ever needs a light mode separate from NeoCart's */
-    --background-light-supportpal: 210 40% 98%; /* #F8FAFC */
-    --foreground-light-supportpal: 222 47% 11%; /* #0F172A */
-    
     /* NeoCart Light Theme (Primary focus for NeoCart pages) */
     --background: 220 20% 97%;             /* #F1F5F9 - Light Gray, default for NeoCart */
     --foreground: 224 71% 4%;           /* #0A0F1E - Dark Slate, default for NeoCart */
@@ -27,6 +22,10 @@ body {
     /* Semantic Colors (NeoCart Light Mode) */
     --primary: 217 91% 60%;              /* #3B82F6 - Vivid Blue (NeoCart primary) */
     --primary-foreground: 210 40% 98%;    /* #F8FAFC - Light text on primary */
+
+    --cta-blue-learn-more: 220 99% 63%; /* #4277FF - Specific blue for "Learn More" button */
+    --cta-blue-learn-more-foreground: 0 0% 100%; /* White text for this button */
+
 
     --secondary: 220 14% 96%;            /* #F1F5F9 (slate-100) - Light gray */
     --secondary-foreground: 215 25% 35%;  /* #475569 (slate-600) - Darker gray text */
@@ -178,5 +177,3 @@ body {
     flex: 1; 
   }
 }
-
-    
