@@ -3,7 +3,7 @@
 
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Mail, MessageSquare, Phone, Flame, AlertTriangle, ShieldCheck, PackageSearch } from "lucide-react"; // Added PackageSearch
+import { Mail, MessageSquare, Phone, Flame, AlertTriangle, ShieldCheck, PackageSearch } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ import {
 
 interface InquiryListItemProps {
   inquiry: Inquiry;
-  customer?: Customer; // Customer can be undefined if it's an anonymous product query
+  customer?: Customer; 
   isSelected: boolean;
   onSelect: (id: string) => void;
 }
@@ -29,20 +29,34 @@ const ChannelIcon: React.FC<{ channel: Inquiry['channel'] }> = ({ channel }) => 
   if (channel === 'email') return <Mail className="h-3.5 w-3.5 text-muted-foreground" />;
   if (channel === 'chat') return <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />;
   if (channel === 'phone') return <Phone className="h-3.5 w-3.5 text-muted-foreground" />;
-  if (channel === 'product_query') return <PackageSearch className="h-3.5 w-3.5 text-muted-foreground" />; // Icon for product query
+  if (channel === 'product_query') return <PackageSearch className="h-3.5 w-3.5 text-muted-foreground" />;
   return null;
 };
 
-const getPriorityLabel = (score?: number): "Urgent" | "High" | "Medium" | "Low" | "N/A" => {
-  if (score === undefined) return "N/A";
-  if (score >= 9) return "Urgent";
-  if (score >= 7) return "High";
-  if (score >= 4) return "Medium";
-  return "Low";
+const getPriorityLabelAndStyle = (score?: number): { 
+  label: "Urgent" | "High" | "Medium" | "Low" | "N/A"; 
+  itemBorderClass: string;
+} => {
+  let itemBorderClass = "border-l-transparent";
+  if (score === undefined) return { label: "N/A", itemBorderClass };
+  if (score >= 9) {
+    itemBorderClass = "border-l-status-high"; // Red
+    return { label: "Urgent", itemBorderClass };
+  }
+  if (score >= 7) {
+    itemBorderClass = "border-l-status-medium"; // Amber
+    return { label: "High", itemBorderClass };
+  }
+  if (score >= 4) {
+    itemBorderClass = "border-l-accent"; // Amber (same as High, as per current badge logic)
+    return { label: "Medium", itemBorderClass };
+  }
+  itemBorderClass = "border-l-status-low"; // Green
+  return { label: "Low", itemBorderClass };
 };
 
 const PriorityBadge: React.FC<{ score?: number, isSelected: boolean }> = ({ score, isSelected }) => {
-  const label = getPriorityLabel(score);
+  const { label } = getPriorityLabelAndStyle(score);
   if (label === "N/A") return null;
 
   let icon = null;
@@ -60,10 +74,11 @@ const PriorityBadge: React.FC<{ score?: number, isSelected: boolean }> = ({ scor
     case "High":
       icon = <AlertTriangle className="h-3 w-3 mr-1" />;
       badgeClasses = isSelected ? "bg-status-medium" : "bg-status-medium/20";
-      textClasses = isSelected ? "text-black" : "text-status-medium";
+      textClasses = isSelected ? "text-black" : "text-status-medium"; // Ensure contrast with amber
       borderClasses = isSelected ? "border-status-medium" : "border-status-medium/30";
       break;
     case "Medium":
+      // Using accent for medium, consistent with original badge logic
       badgeClasses = isSelected ? "bg-accent" : "bg-accent/20";
       textClasses = isSelected ? "text-accent-foreground" : "text-accent";
       borderClasses = isSelected ? "border-accent" : "border-accent/30";
@@ -108,7 +123,9 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
   const timeAgo = formatDistanceToNow(new Date(inquiry.timestamp), { addSuffix: true });
   
   const displayName = customer?.name || inquiry.anonymousUserName || 'Unknown User';
-  const displayAvatarUrl = customer?.avatarUrl; // For anonymous users, AvatarFallback will be used
+  const displayAvatarUrl = customer?.avatarUrl;
+
+  const { itemBorderClass } = getPriorityLabelAndStyle(priorityInfo?.priorityScore);
 
   return (
     <TooltipProvider>
@@ -116,6 +133,8 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
       onClick={() => onSelect(inquiry.id)}
       className={cn(
         "w-full text-left p-3 rounded-lg hover:bg-sidebar-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+        "border-l-4", // Default left border thickness
+        isLoading ? "border-l-transparent" : itemBorderClass, // Apply priority border color
         isSelected && "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90"
       )}
     >
@@ -123,7 +142,7 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
         <Avatar className="h-8 w-8 border border-sidebar-border shrink-0">
           <AvatarImage src={displayAvatarUrl} alt={displayName} data-ai-hint="person avatar" />
           <AvatarFallback className="text-xs">
-            {displayName?.split(" ").map(n => n[0]).join("").substring(0,2) || 'U'}
+            {displayName?.split(" ").map(n => n[0]).join("").substring(0,2).toUpperCase() || 'U'}
           </AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">
@@ -139,7 +158,7 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
             <div className="flex items-center gap-2">
               <ChannelIcon channel={inquiry.channel} />
               {isLoading ? (
-                <Skeleton className="h-5 w-16 rounded" /> 
+                <Skeleton className="h-5 w-16 rounded bg-muted/50" /> 
               ) : priorityInfo ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -147,7 +166,7 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
                         <PriorityBadge score={priorityInfo.priorityScore} isSelected={isSelected} />
                     </div>
                   </TooltipTrigger>
-                  <TooltipContent side="top" align="start" className="max-w-xs bg-popover text-popover-foreground p-2 rounded shadow-lg">
+                  <TooltipContent side="top" align="start" className="max-w-xs bg-popover text-popover-foreground p-2 rounded shadow-lg border border-border">
                     <p className="text-xs font-medium mb-1">AI Priority Assessment:</p>
                     <p className="text-xs">{priorityInfo.reason || "No specific reason provided."}</p>
                   </TooltipContent>
@@ -178,3 +197,4 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
 };
 
 export default InquiryListItem;
+
