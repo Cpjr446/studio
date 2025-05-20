@@ -1,7 +1,7 @@
 
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
-import '../globals.css'; // We can reuse some base styles, but override for light theme
+import '../globals.css'; 
 import { Toaster } from "@/components/ui/toaster";
 import NeoCartHeader from '@/components/neocart/NeoCartHeader';
 import NeoCartFooter from '@/components/neocart/NeoCartFooter';
@@ -22,8 +22,8 @@ export default function NeoCartLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light" style={{ colorScheme: 'light' }}> {/* Enforce light theme */}
-      <body className={`${geistSans.variable} font-sans antialiased bg-white text-slate-800 flex flex-col min-h-screen`}>
+    <html lang="en" className="light" style={{ colorScheme: 'light', scrollBehavior: 'smooth' }}> {/* Enforce light theme & smooth scroll */}
+      <body className={`${geistSans.variable} font-sans antialiased bg-slate-50 text-slate-800 flex flex-col min-h-screen`}>
         <NeoCartHeader />
         <main className="flex-1">
           {children}
