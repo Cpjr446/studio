@@ -9,18 +9,23 @@ body {
 
 @layer base {
   :root {
-    /* Light Mode Base (placeholders, focus is on Dark Mode as per prompt) */
-    --background: 210 40% 98%;             /* #F8FAFC - Default Light Background */
-    --foreground: 222 47% 11%;           /* #0F172A - Default Light Foreground */
+    /* Light Mode Base for SupportPal AI (can be different from NeoCart if needed) */
+    /* These are placeholders if SupportPal ever needs a light mode separate from NeoCart's */
+    --background-light-supportpal: 210 40% 98%; /* #F8FAFC */
+    --foreground-light-supportpal: 222 47% 11%; /* #0F172A */
+    
+    /* NeoCart Light Theme (Primary focus for NeoCart pages) */
+    --background: 220 20% 97%;             /* #F1F5F9 - Light Gray, default for NeoCart */
+    --foreground: 224 71% 4%;           /* #0A0F1E - Dark Slate, default for NeoCart */
 
-    --card: 210 40% 98%;                   /* #F8FAFC */
-    --card-foreground: 222 47% 11%;       /* #0F172A */
+    --card: 0 0% 100%;                   /* #FFFFFF - White for NeoCart cards */
+    --card-foreground: 224 71% 4%;       /* #0A0F1E */
 
-    --popover: 210 40% 98%;                /* #F8FAFC */
-    --popover-foreground: 222 47% 11%;    /* #0F172A */
+    --popover: 0 0% 100%;                /* #FFFFFF */
+    --popover-foreground: 224 71% 4%;    /* #0A0F1E */
 
-    /* Semantic Colors (Light Mode - placeholders) */
-    --primary: 217 91% 60%;              /* #3B82F6 - Vivid Blue */
+    /* Semantic Colors (NeoCart Light Mode) */
+    --primary: 217 91% 60%;              /* #3B82F6 - Vivid Blue (NeoCart primary) */
     --primary-foreground: 210 40% 98%;    /* #F8FAFC - Light text on primary */
 
     --secondary: 220 14% 96%;            /* #F1F5F9 (slate-100) - Light gray */
@@ -29,109 +34,129 @@ body {
     --muted: 220 13% 91%;               /* #E2E8F0 (slate-200) */
     --muted-foreground: 215 20% 65%;      /* #A0AEC0 (slate-500) */
 
-    --accent: 231 99% 62%;                /* #3D5AFE - Indigo A400 (example, adjust if needed for light) */
+    --accent: 38 92% 50%;                 /* #F59E0B - Amber for NeoCart accents like notifications */
     --accent-foreground: 210 40% 98%;     /* #F8FAFC - Light text on accent */
 
-    --destructive: 0 100% 66%;             /* #FF5252 - Red A200 (example) */
+    --destructive: 0 72% 51%;             /* #DC2626 - Crimson for NeoCart urgent/destructive */
     --destructive-foreground: 0 0% 98%;   /* #FEF2F2 - Almost white */
 
-    --success: 122 39% 49%;              /* #4CAF50 - Green 500 (example) */
+    --success: 142 71% 45%;              /* #10B981 - Emerald green for NeoCart success */
     --success-foreground: 0 0% 98%;      /* #F0FDF4 - Almost white */
 
-    --border: 220 13% 88%;               /* #CBD5E1 (slate-300) */
-    --input: 210 40% 98%;                  /* #FFFFFF - White input background */
-    --ring: 217 91% 60%;                 /* #3B82F6 - Primary blue for focus rings */
+    --border: 220 13% 88%;               /* #CBD5E1 (slate-300) for NeoCart borders */
+    --input: 0 0% 100%;                  /* #FFFFFF - White input background for NeoCart */
+    --ring: 217 91% 60%;                 /* #3B82F6 - Primary blue for focus rings in NeoCart */
 
     --radius: 0.5rem;
 
-    /* Custom colors for chat bubbles etc. - Light mode placeholders */
-    --chat-bubble-agent-bg: 220 14% 93%;    /* Lighter shade for agent */
-    --chat-bubble-agent-text: 215 25% 35%;
-    --chat-bubble-customer-bg: 0 0% 100%; /* White for customer */
-    --chat-bubble-customer-text: 215 39% 22%;
+    /* SupportPal AI Dark Mode (this remains for the agent interface) */
+    --dark-background: 222 47% 6%; /* #0F172A - Deep Navy for SupportPal dark bg */
+    --dark-foreground: 210 40% 98%; /* #F8FAFC - Light text for SupportPal dark fg */
     
-    --status-high: 0 100% 66%; /* #FF5252 */
-    --status-medium: 45 100% 51%; /* #FFC107 */
-    --status-low: 122 39% 49%; /* #4CAF50 */
+    --dark-card: 222 47% 11%; /* #1E293B - Slightly Lighter Navy for cards */
+    --dark-card-foreground: 210 40% 98%;
 
-    /* Sidebar specific colors (Light Mode - placeholders) */
-    --sidebar-background: 220 14% 97%;        /* #F8FAFC (slate-50) - Very light gray */
-    --sidebar-foreground: 215 30% 30%;        /* #334155 (slate-700) - Dark gray/blue text */
-    --sidebar-primary: 217 91% 60%;           /* #3B82F6 - Main primary blue */
-    --sidebar-primary-foreground: 0 0% 100%;  /* #FFFFFF */
-    --sidebar-accent: 220 13% 90%;            /* #E2E8F0 (slate-200) - Hover state */
-    --sidebar-accent-foreground: 215 30% 25%; /* #1E293B (slate-800) - Darker text on hover */
-    --sidebar-border: 220 13% 85%;            /* #D1D5DB (slate-300) */
+    --dark-popover: 222 47% 11%; 
+    --dark-popover-foreground: 210 40% 98%;
+
+    --dark-primary: 217 91% 60%; /* #3B82F6 - Vivid blue for SupportPal primary */
+    --dark-primary-foreground: 210 40% 98%;
+
+    --dark-secondary: 222 47% 16%; /* Darker secondary for SupportPal */
+    --dark-secondary-foreground: 210 40% 90%;
+
+    --dark-muted: 222 47% 13%;
+    --dark-muted-foreground: 210 40% 70%;
+
+    --dark-accent: 38 92% 50%; /* #F59E0B - Amber for SupportPal accents */
+    --dark-accent-foreground: 222 47% 6%;
+
+    --dark-destructive: 0 72% 51%; /* #DC2626 - Crimson for SupportPal destructive */
+    --dark-destructive-foreground: 210 40% 98%;
+    
+    --dark-success: 142 71% 45%; /* #10B981 - Emerald green for SupportPal success */
+    --dark-success-foreground: 222 47% 6%;
+
+    --dark-border: 222 47% 18%; /* Border for SupportPal dark */
+    --dark-input: 222 47% 11%;
+    --dark-ring: 217 91% 60%;
+
+    /* Status colors for SupportPal AI (Dark mode context) */
+    --status-high: 0 72% 51%; /* #DC2626 */
+    --status-medium: 38 92% 50%; /* #F59E0B */
+    --status-low: 142 71% 45%; /* #10B981 */
+
+    /* Chat bubbles for SupportPal AI (Dark mode context) */
+    --chat-bubble-agent-bg: 217 91% 50%; /* Darker primary for agent */
+    --chat-bubble-agent-text: 210 40% 98%;
+    --chat-bubble-customer-bg: 222 47% 16%; /* Dark secondary for customer */
+    --chat-bubble-customer-text: 210 40% 98%;
+    
+    /* Sidebar specific colors (SupportPal AI Dark Mode) */
+    --sidebar-background: 222 47% 5%;        /* Even darker for sidebar */
+    --sidebar-foreground: 210 40% 85%;        
+    --sidebar-primary: 217 91% 60%;           
+    --sidebar-primary-foreground: 0 0% 100%;  
+    --sidebar-accent: 222 47% 13%;            
+    --sidebar-accent-foreground: 0 0% 100%; 
+    --sidebar-border: 222 47% 11%;            
     --sidebar-ring: 217 91% 60%;
 
-    /* Chart Colors (Example, can be refined) */
-    --chart-1: 217 91% 60%; /* Primary Blue */
-    --chart-2: 37 90% 50%;  /* Accent Amber */
-    --chart-3: 160 82% 42%; /* Success Emerald */
-    --chart-4: 261 60% 62%; /* Existing Purple (can be updated) */
-    --chart-5: 0 70% 50%;   /* Destructive Crimson */
+    /* Chart Colors for SupportPal AI (Dark Mode) */
+    --chart-1: 217 91% 60%; 
+    --chart-2: 38 92% 50%;  
+    --chart-3: 142 71% 45%; 
+    --chart-4: 0 72% 51%; 
+    --chart-5: 210 40% 80%; 
   }
 
+  /* Styles for the SupportPal AI Dark Mode Interface */
   .dark {
-    /* Dark Mode Base */
-    --background: 0 0% 7%;             /* #121212 */
-    --foreground: 0 0% 100%;           /* #FFFFFF */
+    --background: var(--dark-background);
+    --foreground: var(--dark-foreground);
+    --card: var(--dark-card);
+    --card-foreground: var(--dark-card-foreground);
+    --popover: var(--dark-popover);
+    --popover-foreground: var(--dark-popover-foreground);
+    --primary: var(--dark-primary);
+    --primary-foreground: var(--dark-primary-foreground);
+    --secondary: var(--dark-secondary);
+    --secondary-foreground: var(--dark-secondary-foreground);
+    --muted: var(--dark-muted);
+    --muted-foreground: var(--dark-muted-foreground);
+    --accent: var(--dark-accent);
+    --accent-foreground: var(--dark-accent-foreground);
+    --destructive: var(--dark-destructive);
+    --destructive-foreground: var(--dark-destructive-foreground);
+    --success: var(--dark-success);
+    --success-foreground: var(--dark-success-foreground);
+    --border: var(--dark-border);
+    --input: var(--dark-input);
+    --ring: var(--dark-ring);
 
-    --card: 0 0% 12%;                   /* #1E1E1E */
-    --card-foreground: 0 0% 100%;       /* #FFFFFF */
-
-    --popover: 0 0% 12%;                /* #1E1E1E */
-    --popover-foreground: 0 0% 100%;    /* #FFFFFF */
-
-    /* Semantic Colors (Dark Mode Variants) */
-    --primary: 231 99% 62%;              /* #3D5AFE - Accent from prompt */
-    --primary-foreground: 0 0% 100%;    /* #FFFFFF - Text on primary */
-
-    --secondary: 0 0% 18%;            /* #2D2D2D - A bit lighter than card for secondary elements */
-    --secondary-foreground: 0 0% 63%;  /* #A0A0A0 - Text Secondary from prompt */
+    /* Specific dark mode variables if needed, otherwise they inherit from above */
+    --status-high: hsl(var(--status-high));
+    --status-medium: hsl(var(--status-medium));
+    --status-low: hsl(var(--status-low));
+    --chat-bubble-agent-bg: hsl(var(--chat-bubble-agent-bg));
+    --chat-bubble-agent-text: hsl(var(--chat-bubble-agent-text));
+    --chat-bubble-customer-bg: hsl(var(--chat-bubble-customer-bg));
+    --chat-bubble-customer-text: hsl(var(--chat-bubble-customer-text));
     
-    --muted: 0 0% 15%;               /* Slightly different from card/secondary */
-    --muted-foreground: 0 0% 63%;      /* #A0A0A0 */
+    --sidebar-background: hsl(var(--sidebar-background));
+    --sidebar-foreground: hsl(var(--sidebar-foreground));
+    --sidebar-primary: hsl(var(--sidebar-primary));
+    --sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+    --sidebar-accent: hsl(var(--sidebar-accent));
+    --sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+    --sidebar-border: hsl(var(--sidebar-border));
+    --sidebar-ring: hsl(var(--sidebar-ring));
 
-    --accent: 231 99% 62%;                /* #3D5AFE - Indigo A400 */
-    --accent-foreground: 0 0% 100%;     /* #FFFFFF - Text on accent */
-
-    --destructive: 0 100% 66%;             /* #FF5252 - Status High */
-    --destructive-foreground: 0 0% 0%;   /* Black text on destructive for contrast */
-
-    --success: 122 39% 49%;              /* #4CAF50 - Status Low */
-    --success-foreground: 0 0% 100%;    /* White text on success */
-    
-    --border: 0 0% 20%;               /* Darker border #333333 approx */
-    --input: 0 0% 12%;                /* #1E1E1E - Surface Cards for input */
-    --ring: 231 99% 70%;                 /* Lighter version of accent for focus rings */
-
-    /* Custom colors from prompt */
-    --status-high: 0 100% 66%; /* #FF5252 */
-    --status-medium: 45 100% 51%; /* #FFC107 */
-    --status-low: 122 39% 49%; /* #4CAF50 */
-
-    --chat-bubble-agent-bg: 0 0% 18%;    /* #2D2D2D */
-    --chat-bubble-agent-text: 0 0% 100%; /* #FFFFFF */
-    --chat-bubble-customer-bg: 0 0% 10%; /* #1A1A1A */
-    --chat-bubble-customer-text: 0 0% 100%; /* #FFFFFF */
-
-    /* Sidebar specific colors (Dark Mode) */
-    --sidebar-background: 0 0% 9%;         /* Slightly darker than main bg */
-    --sidebar-foreground: 0 0% 80%;        /* Lighter gray text */
-    --sidebar-primary: 231 99% 62%;           /* #3D5AFE */
-    --sidebar-primary-foreground: 0 0% 100%; /* #FFFFFF */
-    --sidebar-accent: 0 0% 15%;            /* Hover state */
-    --sidebar-accent-foreground: 0 0% 100%; 
-    --sidebar-border: 0 0% 12%;            /* Border for sidebar elements */
-    --sidebar-ring: 231 99% 70%;
-
-    /* Chart Colors (Dark Mode - adjust for contrast if charts are used) */
-    --chart-1: 231 99% 62%;
-    --chart-2: 45 100% 51%;
-    --chart-3: 122 39% 49%;
-    --chart-4: 0 100% 66%; 
-    --chart-5: 210 40% 80%; /* A generic light blue for a 5th chart color */
+    --chart-1: hsl(var(--chart-1));
+    --chart-2: hsl(var(--chart-2));
+    --chart-3: hsl(var(--chart-3));
+    --chart-4: hsl(var(--chart-4));
+    --chart-5: hsl(var(--chart-5));
   }
 }
 
@@ -139,19 +164,18 @@ body {
   * {
     @apply border-border;
   }
+  /* Default body styles target NeoCart's light theme. SupportPal dark theme is applied via .dark class on its html tag. */
   body {
     @apply bg-background text-foreground;
-    /* Ensure body takes full height for fixed elements */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
-  /* Ensure html and body take full height for flex layouts */
   html, body, #__next {
-    height: 100%;
+    height: 100%; /* Ensures containers can take full height */
   }
   main {
-    flex: 1; /* Allows main content to grow and fill space */
+    flex: 1; 
   }
 }
 

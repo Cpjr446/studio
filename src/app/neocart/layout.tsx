@@ -1,12 +1,13 @@
 
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Geist_Sans } from 'next/font/google'; // Corrected import
 import '../globals.css'; 
 import { Toaster } from "@/components/ui/toaster";
 import NeoCartHeader from '@/components/neocart/NeoCartHeader';
 import NeoCartFooter from '@/components/neocart/NeoCartFooter';
+import SupportChatWidget from '@/components/neocart/SupportChatWidget'; // Import the chat widget
 
-const geistSans = Geist({ 
+const geistSans = Geist_Sans({ // Use the correct variable name
   variable: '--font-geist-sans',
   subsets: ['latin'],
 });
@@ -22,15 +23,19 @@ export default function NeoCartLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light" style={{ colorScheme: 'light', scrollBehavior: 'smooth' }}> {/* Enforce light theme & smooth scroll */}
+    // Ensure light theme is applied for NeoCart pages, and smooth scroll
+    <html lang="en" className="light" style={{ colorScheme: 'light', scrollBehavior: 'smooth' }}> 
       <body className={`${geistSans.variable} font-sans antialiased bg-slate-50 text-slate-800 flex flex-col min-h-screen`}>
         <NeoCartHeader />
         <main className="flex-1">
           {children}
         </main>
         <NeoCartFooter />
+        <SupportChatWidget /> {/* Add the chat widget here */}
         <Toaster />
       </body>
     </html>
   );
 }
+
+    
