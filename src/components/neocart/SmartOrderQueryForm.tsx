@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -43,10 +44,8 @@ export default function SmartOrderQueryForm({ onSubmit }: SmartOrderQueryFormPro
   const handleFormSubmit = async (data: SmartOrderQueryFormData) => {
     try {
       await onSubmit(data);
-      // Reset form only if onSubmit was successful
       reset();
     } catch (error) {
-      // Parent component will handle error toasts
       console.error("Form submission error:", error);
     }
   };
@@ -54,20 +53,20 @@ export default function SmartOrderQueryForm({ onSubmit }: SmartOrderQueryFormPro
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 md:space-y-8">
       <div>
-        <Label htmlFor="name" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.name && "text-red-600")}>
+        <Label htmlFor="name" className={cn("block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1", errors.name && "text-red-600 dark:text-red-400")}>
           Your Name
         </Label>
         <Input
           id="name"
           {...register("name")}
           placeholder="e.g., Jane Doe"
-          className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"
+          className="mt-1 w-full border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base bg-primary/10 text-slate-800 placeholder:text-primary/60 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400"
         />
-        {errors.name && <p className="text-xs text-red-600 mt-1.5">{errors.name.message}</p>}
+        {errors.name && <p className="text-xs text-red-600 dark:text-red-400 mt-1.5">{errors.name.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="email" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.email && "text-red-600")}>
+        <Label htmlFor="email" className={cn("block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1", errors.email && "text-red-600 dark:text-red-400")}>
           Your Email
         </Label>
         <Input
@@ -75,26 +74,26 @@ export default function SmartOrderQueryForm({ onSubmit }: SmartOrderQueryFormPro
           type="email"
           {...register("email")}
           placeholder="e.g., jane.doe@example.com"
-          className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"
+          className="mt-1 w-full border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base bg-primary/10 text-slate-800 placeholder:text-primary/60 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400"
         />
-        {errors.email && <p className="text-xs text-red-600 mt-1.5">{errors.email.message}</p>}
+        {errors.email && <p className="text-xs text-red-600 dark:text-red-400 mt-1.5">{errors.email.message}</p>}
       </div>
       
       <div>
-        <Label htmlFor="subject" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.subject && "text-red-600")}>
+        <Label htmlFor="subject" className={cn("block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1", errors.subject && "text-red-600 dark:text-red-400")}>
           Subject
         </Label>
         <Input
           id="subject"
           {...register("subject")}
           placeholder="e.g., Question about SmartOrder features"
-          className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"
+          className="mt-1 w-full border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base bg-primary/10 text-slate-800 placeholder:text-primary/60 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400"
         />
-        {errors.subject && <p className="text-xs text-red-600 mt-1.5">{errors.subject.message}</p>}
+        {errors.subject && <p className="text-xs text-red-600 dark:text-red-400 mt-1.5">{errors.subject.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="message" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.message && "text-red-600")}>
+        <Label htmlFor="message" className={cn("block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1", errors.message && "text-red-600 dark:text-red-400")}>
           Message
         </Label>
         <Textarea
@@ -102,14 +101,14 @@ export default function SmartOrderQueryForm({ onSubmit }: SmartOrderQueryFormPro
           {...register("message")}
           placeholder="Please describe your inquiry in detail..."
           rows={5}
-          className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"
+          className="mt-1 w-full border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base bg-primary/10 text-slate-800 placeholder:text-primary/60 dark:bg-slate-700 dark:text-slate-100 dark:placeholder:text-slate-400"
         />
-        {errors.message && <p className="text-xs text-red-600 mt-1.5">{errors.message.message}</p>}
+        {errors.message && <p className="text-xs text-red-600 dark:text-red-400 mt-1.5">{errors.message.message}</p>}
       </div>
 
       <Button 
         type="submit" 
-        className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white py-3 px-6 text-base font-semibold rounded-lg shadow-md transition-colors duration-300 ease-in-out disabled:opacity-70" 
+        className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground dark:text-primary-foreground py-3 px-6 text-base font-semibold rounded-lg shadow-md transition-colors duration-300 ease-in-out disabled:opacity-70" 
         disabled={isSubmitting}
       >
         <Send className="h-5 w-5" />

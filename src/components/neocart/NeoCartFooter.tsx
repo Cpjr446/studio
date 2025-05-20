@@ -1,10 +1,10 @@
 
 import Link from "next/link";
-import { Zap } from "lucide-react"; // Reusing Zap for brand consistency
+import { Zap } from "lucide-react"; 
 
 export default function NeoCartFooter() {
   return (
-    <footer className="bg-slate-800 text-slate-400 py-12 md:py-16">
+    <footer className="bg-slate-800 dark:bg-black text-slate-400 dark:text-slate-500 py-12 md:py-16 border-t dark:border-slate-700">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="flex items-center justify-center md:justify-start gap-2">
@@ -31,3 +31,4 @@ export default function NeoCartFooter() {
     </footer>
   );
 }
+

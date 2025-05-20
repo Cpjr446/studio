@@ -11,8 +11,8 @@ import { Toaster } from "@/components/ui/toaster";
 // and their .variable property provides the necessary CSS class name.
 
 export const metadata: Metadata = {
-  title: 'SupportPal AI',
-  description: 'AI-Powered Customer Support Platform',
+  title: 'NeoCart', // Updated website title
+  description: 'AI-Powered Customer Support Platform & E-commerce Solutions',
 };
 
 export default function RootLayout({
@@ -21,7 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Default to dark mode
+    // Default to dark mode for the overall application shell (SupportPal)
+    // NeoCart layout will manage its own theme appearance within this.
     <html lang="en" suppressHydrationWarning className="dark">
       {/*
         Apply the .variable class names directly from the imported font objects.
@@ -35,3 +36,4 @@ export default function RootLayout({
     </html>
   );
 }
+

@@ -5,13 +5,13 @@ import Link from 'next/link';
 
 export default function HeroSection() {
   return (
-    <section id="hero" className="bg-gradient-to-br from-slate-50 to-sky-100 py-20 md:py-32">
+    <section id="hero" className="bg-gradient-to-br from-slate-50 to-sky-100 dark:from-slate-800 dark:to-sky-900 py-20 md:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
         <div className="text-center md:text-left">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">
             Revolutionize Your E-commerce with <span className="text-primary">SmartOrder</span>
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-xl md:max-w-none mx-auto md:mx-0">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-xl md:max-w-none mx-auto md:mx-0">
             SmartOrder is the intelligent plugin empowering businesses to effortlessly manage, fulfill, and track online orders, boosting efficiency and customer satisfaction.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
@@ -29,7 +29,7 @@ export default function HeroSection() {
             alt="SmartOrder Dashboard Interface Mockup"
             width={700}
             height={500}
-            className="rounded-xl shadow-2xl mx-auto transform transition-all duration-500 hover:scale-105"
+            className="rounded-xl shadow-2xl mx-auto transform transition-all duration-500 hover:scale-105 dark:shadow-sky-700/30"
             data-ai-hint="ecommerce dashboard analytics"
             priority
           />
@@ -38,3 +38,4 @@ export default function HeroSection() {
     </section>
   );
 }
+
