@@ -1,15 +1,17 @@
 
 import type {Metadata} from 'next';
-import { Geist, Geist_Mono } from 'next/font/google'; 
+// Corrected Geist font imports
+import { GeistSans } from 'geist/font/sans'; 
+import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"; 
 
-const geistSans = Geist({ 
+const geistSans = GeistSans({ 
   variable: '--font-geist-sans',
   subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({ 
+const geistMono = GeistMono({ 
   variable: '--font-geist-mono',
   subsets: ['latin'],
 });
@@ -27,12 +29,10 @@ export default function RootLayout({
   return (
     // Default to dark mode
     <html lang="en" suppressHydrationWarning className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground flex flex-col min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground flex flex-col min-h-screen`}>
         {children}
         <Toaster />
       </body>
     </html>
   );
 }
-
-    
