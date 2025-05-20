@@ -81,32 +81,32 @@ body {
     --dark-ring: 217 91% 60%;
 
     /* Status colors for SupportPal AI (Dark mode context) */
-    --status-high: 0 72% 51%; /* #DC2626 */
-    --status-medium: 38 92% 50%; /* #F59E0B */
-    --status-low: 142 71% 45%; /* #10B981 */
+    --status-high: hsl(var(--status-high));
+    --status-medium: hsl(var(--status-medium));
+    --status-low: hsl(var(--status-low));
 
     /* Chat bubbles for SupportPal AI (Dark mode context) */
-    --chat-bubble-agent-bg: 217 91% 50%; /* Darker primary for agent */
-    --chat-bubble-agent-text: 210 40% 98%;
-    --chat-bubble-customer-bg: 222 47% 16%; /* Dark secondary for customer */
-    --chat-bubble-customer-text: 210 40% 98%;
+    --chat-bubble-agent-bg: hsl(var(--chat-bubble-agent-bg));
+    --chat-bubble-agent-text: hsl(var(--chat-bubble-agent-text));
+    --chat-bubble-customer-bg: hsl(var(--chat-bubble-customer-bg));
+    --chat-bubble-customer-text: hsl(var(--chat-bubble-customer-text));
     
     /* Sidebar specific colors (SupportPal AI Dark Mode) */
-    --sidebar-background: 222 47% 5%;        /* Even darker for sidebar */
-    --sidebar-foreground: 210 40% 85%;        
-    --sidebar-primary: 217 91% 60%;           
-    --sidebar-primary-foreground: 0 0% 100%;  
-    --sidebar-accent: 222 47% 13%;            
-    --sidebar-accent-foreground: 0 0% 100%; 
-    --sidebar-border: 222 47% 11%;            
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-background: hsl(var(--sidebar-background));
+    --sidebar-foreground: hsl(var(--sidebar-foreground));
+    --sidebar-primary: hsl(var(--sidebar-primary));
+    --sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+    --sidebar-accent: hsl(var(--sidebar-accent));
+    --sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+    --sidebar-border: hsl(var(--sidebar-border));
+    --sidebar-ring: hsl(var(--sidebar-ring));
 
     /* Chart Colors for SupportPal AI (Dark Mode) */
-    --chart-1: 217 91% 60%; 
-    --chart-2: 38 92% 50%;  
-    --chart-3: 142 71% 45%; 
-    --chart-4: 0 72% 51%; 
-    --chart-5: 210 40% 80%; 
+    --chart-1: hsl(var(--chart-1));
+    --chart-2: hsl(var(--chart-2));
+    --chart-3: hsl(var(--chart-3));
+    --chart-4: hsl(var(--chart-4));
+    --chart-5: hsl(var(--chart-5));
   }
 
   /* Styles for the SupportPal AI Dark Mode Interface */
@@ -169,6 +169,9 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+  }
+  html {
+    scroll-behavior: smooth; /* Added for smooth scrolling */
   }
   html, body, #__next {
     height: 100%; /* Ensures containers can take full height */

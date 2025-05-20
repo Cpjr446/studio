@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Zap, HelpCircle } from 'lucide-react'; // Using Zap as a generic "smart" icon
+import { ShoppingBag, Zap, HelpCircle } from 'lucide-react'; 
 
 interface NeoCartHeaderProps {
   onFAQClick: () => void;
@@ -32,7 +32,7 @@ export default function NeoCartHeader({ onFAQClick }: NeoCartHeaderProps) {
           <Button 
             variant="outline" 
             onClick={onFAQClick} 
-            className="text-base font-medium text-slate-600 hover:text-primary transition-colors border-slate-300 hover:border-primary/80 px-5 py-2.5"
+            className="text-base font-medium text-primary border-primary hover:bg-primary/10 hover:text-primary transition-colors px-5 py-2.5"
           >
             <HelpCircle className="h-5 w-5 mr-2" />
             FAQ

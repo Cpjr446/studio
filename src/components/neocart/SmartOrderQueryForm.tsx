@@ -1,8 +1,7 @@
-
 "use client";
 
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -26,7 +25,12 @@ interface SmartOrderQueryFormProps {
 }
 
 export default function SmartOrderQueryForm({ onSubmit }: SmartOrderQueryFormProps) {
-  const { control, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<SmartOrderQueryFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset
+  } = useForm<SmartOrderQueryFormData>({
     resolver: zodResolver(queryFormSchema),
     defaultValues: {
       name: '',
@@ -37,50 +41,68 @@ export default function SmartOrderQueryForm({ onSubmit }: SmartOrderQueryFormPro
   });
 
   const handleFormSubmit = async (data: SmartOrderQueryFormData) => {
-    await onSubmit(data);
-    // Reset form only if onSubmit was successful (implicitly, by not throwing error)
-    // The parent component (ContactSection) will handle success/error toasts.
-    reset(); 
+    try {
+      await onSubmit(data);
+      // Reset form only if onSubmit was successful
+      reset();
+    } catch (error) {
+      // Parent component will handle error toasts
+      console.error("Form submission error:", error);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 md:space-y-8">
       <div>
-        <Label htmlFor="name" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.name && "text-red-600")}>Your Name</Label>
-        <Controller
-          name="name"
-          control={control}
-          render={({ field }) => <Input id="name" {...field} placeholder="e.g., Jane Doe" className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base" />}
+        <Label htmlFor="name" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.name && "text-red-600")}>
+          Your Name
+        </Label>
+        <Input
+          id="name"
+          {...register("name")}
+          placeholder="e.g., Jane Doe"
+          className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"
         />
         {errors.name && <p className="text-xs text-red-600 mt-1.5">{errors.name.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="email" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.email && "text-red-600")}>Your Email</Label>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => <Input id="email" type="email" {...field} placeholder="e.g., jane.doe@example.com" className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base" />}
+        <Label htmlFor="email" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.email && "text-red-600")}>
+          Your Email
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          {...register("email")}
+          placeholder="e.g., jane.doe@example.com"
+          className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"
         />
         {errors.email && <p className="text-xs text-red-600 mt-1.5">{errors.email.message}</p>}
       </div>
       
       <div>
-        <Label htmlFor="subject" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.subject && "text-red-600")}>Subject</Label>
-        <Controller
-          name="subject"
-          control={control}
-          render={({ field }) => <Input id="subject" {...field} placeholder="e.g., Question about SmartOrder features" className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base" />}
+        <Label htmlFor="subject" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.subject && "text-red-600")}>
+          Subject
+        </Label>
+        <Input
+          id="subject"
+          {...register("subject")}
+          placeholder="e.g., Question about SmartOrder features"
+          className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"
         />
         {errors.subject && <p className="text-xs text-red-600 mt-1.5">{errors.subject.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="message" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.message && "text-red-600")}>Message</Label>
-        <Controller
-          name="message"
-          control={control}
-          render={({ field }) => <Textarea id="message" {...field} placeholder="Please describe your inquiry in detail..." rows={5} className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"/>}
+        <Label htmlFor="message" className={cn("block text-sm font-medium text-slate-700 mb-1", errors.message && "text-red-600")}>
+          Message
+        </Label>
+        <Textarea
+          id="message"
+          {...register("message")}
+          placeholder="Please describe your inquiry in detail..."
+          rows={5}
+          className="mt-1 w-full border-slate-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary/50 py-2.5 px-3.5 text-base"
         />
         {errors.message && <p className="text-xs text-red-600 mt-1.5">{errors.message.message}</p>}
       </div>
