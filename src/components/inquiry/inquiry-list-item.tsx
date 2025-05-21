@@ -33,35 +33,43 @@ const ChannelIcon: React.FC<{ channel: Inquiry['channel'] }> = ({ channel }) => 
   return null;
 };
 
-const getPriorityLabelAndStyle = (score?: number): { 
+const getPriorityLabelAndStyle = (score?: number, isSelected?: boolean): { 
   label: "Urgent" | "High" | "Medium" | "Low" | "N/A"; 
   itemBorderClass: string;
+  itemBgClass: string; // For non-selected background based on priority
 } => {
   let itemBorderClass = "border-l-transparent";
-  if (score === undefined) return { label: "N/A", itemBorderClass };
+  let itemBgClass = ""; // Default, no specific background for non-selected items
+
+  if (score === undefined) return { label: "N/A", itemBorderClass, itemBgClass };
+
   if (score >= 9) {
-    itemBorderClass = "border-l-status-high"; // Red
-    return { label: "Urgent", itemBorderClass };
+    itemBorderClass = "border-l-status-high";
+    if (!isSelected) itemBgClass = "bg-status-high/10 hover:bg-status-high/20";
+    return { label: "Urgent", itemBorderClass, itemBgClass };
   }
   if (score >= 7) {
-    itemBorderClass = "border-l-status-medium"; // Amber
-    return { label: "High", itemBorderClass };
+    itemBorderClass = "border-l-status-medium";
+    if (!isSelected) itemBgClass = "bg-status-medium/10 hover:bg-status-medium/20";
+    return { label: "High", itemBorderClass, itemBgClass };
   }
   if (score >= 4) {
-    itemBorderClass = "border-l-accent"; // Amber (same as High, as per current badge logic)
-    return { label: "Medium", itemBorderClass };
+    itemBorderClass = "border-l-accent"; // Using accent for medium as per previous logic
+    if (!isSelected) itemBgClass = "bg-accent/10 hover:bg-accent/20";
+    return { label: "Medium", itemBorderClass, itemBgClass };
   }
-  itemBorderClass = "border-l-status-low"; // Green
-  return { label: "Low", itemBorderClass };
+  itemBorderClass = "border-l-status-low";
+  if (!isSelected) itemBgClass = "bg-status-low/10 hover:bg-status-low/20";
+  return { label: "Low", itemBorderClass, itemBgClass };
 };
 
 const PriorityBadge: React.FC<{ score?: number, isSelected: boolean }> = ({ score, isSelected }) => {
-  const { label } = getPriorityLabelAndStyle(score);
+  const { label } = getPriorityLabelAndStyle(score, isSelected); // Pass isSelected here if badge style depends on it
   if (label === "N/A") return null;
 
   let icon = null;
   let badgeClasses = "";
-  let textClasses = isSelected ? "text-primary-foreground" : "text-foreground";
+  let textClasses = ""; // Will be determined by isSelected and label
   let borderClasses = "border-transparent";
 
   switch (label) {
@@ -74,11 +82,10 @@ const PriorityBadge: React.FC<{ score?: number, isSelected: boolean }> = ({ scor
     case "High":
       icon = <AlertTriangle className="h-3 w-3 mr-1" />;
       badgeClasses = isSelected ? "bg-status-medium" : "bg-status-medium/20";
-      textClasses = isSelected ? "text-black" : "text-status-medium"; // Ensure contrast with amber
+      textClasses = isSelected ? "text-black" : "text-status-medium"; 
       borderClasses = isSelected ? "border-status-medium" : "border-status-medium/30";
       break;
     case "Medium":
-      // Using accent for medium, consistent with original badge logic
       badgeClasses = isSelected ? "bg-accent" : "bg-accent/20";
       textClasses = isSelected ? "text-accent-foreground" : "text-accent";
       borderClasses = isSelected ? "border-accent" : "border-accent/30";
@@ -125,17 +132,19 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
   const displayName = customer?.name || inquiry.anonymousUserName || 'Unknown User';
   const displayAvatarUrl = customer?.avatarUrl;
 
-  const { itemBorderClass } = getPriorityLabelAndStyle(priorityInfo?.priorityScore);
+  const { itemBorderClass, itemBgClass } = getPriorityLabelAndStyle(priorityInfo?.priorityScore, isSelected);
 
   return (
     <TooltipProvider>
     <button
       onClick={() => onSelect(inquiry.id)}
       className={cn(
-        "w-full text-left p-3 rounded-lg hover:bg-sidebar-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
-        "border-l-4", // Default left border thickness
-        isLoading ? "border-l-transparent" : itemBorderClass, // Apply priority border color
-        isSelected && "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90"
+        "w-full text-left p-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+        "border-l-4", 
+        isLoading ? "border-l-transparent" : itemBorderClass, 
+        isSelected 
+          ? "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90" 
+          : cn(itemBgClass, !itemBgClass && "hover:bg-sidebar-accent") // Apply priority BG or default hover if no priority BG
       )}
     >
       <div className="flex items-start gap-2.5">
@@ -183,7 +192,7 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
                 inquiry.status === 'open' && !isSelected && "bg-primary/10 text-primary border-primary/30",
                 inquiry.status === 'open' && isSelected && "bg-primary text-primary-foreground border-primary",
                 inquiry.status === 'resolved' && (isSelected ? "bg-success text-success-foreground border-transparent" : "bg-success/10 text-success border-success/30"),
-                !isSelected && "text-muted-foreground"
+                !isSelected && "text-muted-foreground" // Fallback text color for non-selected, non-status specific badges
               )}
             >
               {inquiry.status}
@@ -197,4 +206,3 @@ const InquiryListItem: React.FC<InquiryListItemProps> = ({ inquiry, customer, is
 };
 
 export default InquiryListItem;
-
