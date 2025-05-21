@@ -22,7 +22,7 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="py-20 md:py-28 bg-white dark:bg-slate-900">
+    <section id="features" className="py-20 md:py-28 bg-[hsl(var(--background))] dark:bg-slate-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white">Unlock Peak E-commerce Efficiency</h2>
