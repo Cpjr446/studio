@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function HeroSection() {
   return (
-    <section id="hero" className="bg-gradient-to-br from-slate-50 to-sky-100 dark:from-slate-800 dark:to-sky-900 py-20 md:py-32">
+    <section id="hero" className="bg-gradient-to-br from-[hsl(var(--background))] to-[hsla(217,91%,60%,0.1)] dark:from-slate-800 dark:to-sky-900 py-20 md:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
         <div className="text-center md:text-left">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">

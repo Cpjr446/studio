@@ -1,7 +1,6 @@
 
 "use client";
 
-import { Inter } from 'next/font/google';
 import '../globals.css'; // Assuming this contains Tailwind base and dark mode utilities
 import { Toaster } from "@/components/ui/toaster";
 import NeoCartHeader from '@/components/neocart/NeoCartHeader';
@@ -9,11 +8,6 @@ import NeoCartFooter from '@/components/neocart/NeoCartFooter';
 import SupportChatWidget from '@/components/neocart/SupportChatWidget';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-});
 
 export default function NeoCartLayout({
   children,
@@ -42,9 +36,9 @@ export default function NeoCartLayout({
     // NeoCart pages will primarily be light by default unless html has 'dark'
     <div 
       className={cn(
-        `${inter.variable} font-sans flex flex-col min-h-screen antialiased`,
+        'font-sans flex flex-col min-h-screen antialiased',
         // Default to light theme for NeoCart content area
-        'bg-slate-50 text-slate-800', 
+        'bg-[hsl(var(--background))] text-slate-800', 
         // Apply dark theme styles if html.dark is present
         'dark:bg-slate-900 dark:text-slate-200' 
       )}
