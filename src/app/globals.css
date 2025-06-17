@@ -134,9 +134,9 @@ body {
     --ring: var(--dark-ring);
 
     /* Specific dark mode variables if needed, otherwise they inherit from above */
-    --status-high: hsl(var(--status-high));
-    --status-medium: hsl(var(--status-medium));
-    --status-low: hsl(var(--status-low));
+    --status-high: 0 80% 60%; /* A vibrant red for high priority */
+    --status-medium: 35 90% 60%; /* A strong amber/orange for medium priority */
+    --status-low: 120 50% 60%; /* A noticeable green for low priority */
     --chat-bubble-agent-bg: hsl(var(--chat-bubble-agent-bg));
     --chat-bubble-agent-text: hsl(var(--chat-bubble-agent-text));
     --chat-bubble-customer-bg: hsl(var(--chat-bubble-customer-bg));

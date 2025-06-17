@@ -32,7 +32,7 @@ export default function FeaturesSection() {
         </div>
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
           {features.map((feature) => (
-            <Card key={feature.title} className="group text-center bg-slate-50 dark:bg-slate-800 dark:border-slate-700 rounded-xl shadow-lg hover:shadow-2xl dark:hover:shadow-primary/20 transition-all duration-300 ease-in-out transform hover:-translate-y-2 p-6 md:p-8">
+            <Card key={feature.title} className="group text-center bg-card dark:bg-dark-card dark:border-slate-700 rounded-xl shadow-lg hover:shadow-2xl dark:hover:shadow-primary/20 transition-all duration-300 ease-in-out transform hover:-translate-y-2 p-6 md:p-8">
               <CardHeader className="items-center pb-4">
                 <div className="p-3 bg-primary/10 dark:bg-primary/20 rounded-full mb-4">
                   {feature.icon} {/* Icon color is text-primary, which should adapt if primary changes in dark mode, or use a specific dark mode icon color if needed */}
