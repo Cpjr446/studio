@@ -22,7 +22,7 @@ const benefits = [
 
 export default function WhyChooseSection() {
   return (
-    <section id="why-choose-us" className="py-20 md:py-28 bg-slate-50 dark:bg-slate-800">
+    <section id="why-choose-us" className="py-20 md:py-28 bg-background dark:bg-slate-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white">Why SmartOrder is Your Best Choice</h2>
@@ -32,7 +32,7 @@ export default function WhyChooseSection() {
         </div>
         <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
           {benefits.map((benefit) => (
-            <Card key={benefit.title} className="bg-white dark:bg-slate-700 dark:border-slate-600 rounded-xl shadow-lg hover:shadow-xl dark:hover:shadow-primary/20 transition-shadow duration-300 p-6 flex flex-col items-center text-center md:flex-row md:text-left md:items-start md:space-x-6">
+            <Card key={benefit.title} className="bg-card dark:bg-dark-card dark:border-slate-600 rounded-xl shadow-lg hover:shadow-xl dark:hover:shadow-primary/20 transition-shadow duration-300 p-6 flex flex-col items-center text-center md:flex-row md:text-left md:items-start md:space-x-6">
               <div className="flex-shrink-0 mb-4 md:mb-0 p-3 bg-primary/10 dark:bg-primary/20 rounded-full">
                 {benefit.icon}
               </div>

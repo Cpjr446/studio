@@ -36,7 +36,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-20 md:py-28 bg-white dark:bg-slate-900">
+    <section id="contact" className="py-20 md:py-28 bg-background dark:bg-slate-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 md:mb-16">
           <Mail className="h-12 w-12 text-primary mx-auto mb-4" />
@@ -46,7 +46,7 @@ export default function ContactSection() {
           </p>
         </div>
         
-        <div className="max-w-2xl mx-auto bg-slate-50 dark:bg-slate-800 dark:border dark:border-slate-700 p-8 md:p-10 rounded-xl shadow-2xl dark:shadow-primary/10">
+        <div className="max-w-2xl mx-auto bg-card dark:bg-dark-card dark:border dark:border-slate-700 p-8 md:p-10 rounded-xl shadow-2xl dark:shadow-primary/10">
             <SmartOrderQueryForm onSubmit={handleFormSubmit} />
         </div>
 

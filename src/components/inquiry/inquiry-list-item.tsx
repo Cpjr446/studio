@@ -54,12 +54,13 @@ const getPriorityLabelAndStyle = (score?: number, isSelected?: boolean): {
     return { label: "High", itemBorderClass, itemBgClass };
   }
   if (score >= 4) {
-    itemBorderClass = "border-l-accent"; // Using accent for medium as per previous logic
-    if (!isSelected) itemBgClass = "bg-accent/10 hover:bg-accent/20";
+    itemBorderClass = "border-l-status-low"; // Medium priority now uses status-low
+    if (!isSelected) itemBgClass = "bg-status-low/10 hover:bg-status-low/20";
     return { label: "Medium", itemBorderClass, itemBgClass };
   }
-  itemBorderClass = "border-l-status-low";
-  if (!isSelected) itemBgClass = "bg-status-low/10 hover:bg-status-low/20";
+  // Low priority
+  itemBorderClass = "border-l-muted/30"; // Low priority uses a more subtle muted border
+  if (!isSelected) itemBgClass = "bg-muted/5 hover:bg-muted/10"; // Subtle muted background
   return { label: "Low", itemBorderClass, itemBgClass };
 };
 
@@ -85,16 +86,17 @@ const PriorityBadge: React.FC<{ score?: number, isSelected: boolean }> = ({ scor
       textClasses = isSelected ? "text-black" : "text-status-medium"; 
       borderClasses = isSelected ? "border-status-medium" : "border-status-medium/30";
       break;
-    case "Medium":
-      badgeClasses = isSelected ? "bg-accent" : "bg-accent/20";
-      textClasses = isSelected ? "text-accent-foreground" : "text-accent";
-      borderClasses = isSelected ? "border-accent" : "border-accent/30";
-      break;
-    case "Low":
-      icon = <ShieldCheck className="h-3 w-3 mr-1" />;
+    case "Medium": // Now uses status-low
+      // icon can be added if desired, e.g. <MinusCircle className="h-3 w-3 mr-1" />
       badgeClasses = isSelected ? "bg-status-low" : "bg-status-low/20";
-      textClasses = isSelected ? "text-white" : "text-status-low";
+      textClasses = isSelected ? "text-white" : "text-status-low"; // Assuming status-low is dark enough for white text
       borderClasses = isSelected ? "border-status-low" : "border-status-low/30";
+      break;
+    case "Low": // Now uses muted styles
+      icon = <ShieldCheck className="h-3 w-3 mr-1" />; // Retain icon for now
+      badgeClasses = isSelected ? "bg-muted-foreground/20" : "bg-muted/50";
+      textClasses = isSelected ? "text-muted-foreground" : "text-muted-foreground/90";
+      borderClasses = isSelected ? "border-muted-foreground/30" : "border-muted/30";
       break;
   }
 
